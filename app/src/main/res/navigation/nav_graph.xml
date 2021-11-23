@@ -17,8 +17,8 @@
             android:id="@+id/action_loginFragment_to_forgotPasswordFragment"
             app:destination="@id/forgotPasswordFragment" />
         <action
-            android:id="@+id/action_loginFragment_to_timelinefragment"
-            app:destination="@id/timelinefragment" />
+            android:id="@+id/action_loginFragment_to_timelineFragment"
+            app:destination="@id/timelineFragment" />
     </fragment>
     <fragment
         android:id="@+id/forgotPasswordFragment"
@@ -39,12 +39,42 @@
             app:destination="@id/loginFragment" />
     </fragment>
     <fragment
-        android:id="@+id/timelinefragment"
+        android:id="@+id/timelineFragment"
         android:name="com.example.bazaar.fragments.TimelineFragment"
-        android:label="fragment_timelinefragment"
+        android:label="fragment_timelineFragment"
         tools:layout="@layout/fragment_timeline" >
         <action
-            android:id="@+id/action_timelinefragment_to_loginFragment"
+            android:id="@+id/action_timelineFragment_to_loginFragment"
             app:destination="@id/loginFragment" />
+        <action
+            android:id="@+id/action_timelineFragment_to_myFaresFragment"
+            app:destination="@id/myFaresFragment" />
+        <action
+            android:id="@+id/action_timelineFragment_to_myMarketFragment"
+            app:destination="@id/myMarketFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/myFaresFragment"
+        android:name="com.example.bazaar.fragments.MyFaresFragment"
+        android:label="fragment_my_fares"
+        tools:layout="@layout/fragment_my_fares" >
+        <action
+            android:id="@+id/action_myFaresFragment_to_timelineFragment"
+            app:destination="@id/timelineFragment" />
+        <action
+            android:id="@+id/action_myFaresFragment_to_myMarketFragment"
+            app:destination="@id/myMarketFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/myMarketFragment"
+        android:name="com.example.bazaar.fragments.MyMarketFragment"
+        android:label="fragment_my_market"
+        tools:layout="@layout/fragment_my_market" >
+        <action
+            android:id="@+id/action_myMarketFragment_to_timelineFragment"
+            app:destination="@id/timelineFragment" />
+        <action
+            android:id="@+id/action_myMarketFragment_to_myFaresFragment"
+            app:destination="@id/myFaresFragment" />
     </fragment>
 </navigation>

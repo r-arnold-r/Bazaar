@@ -180,7 +180,7 @@ class LoginFragment : Fragment() {
             // hide progressbar
             binding.progressbar.visibility = View.INVISIBLE
             // navigate to TimeLineFragment
-            findNavController().navigate(R.id.action_loginFragment_to_timelinefragment)
+            findNavController().navigate(R.id.action_loginFragment_to_timelineFragment)
             // make login button clickable
             binding.loginBtn.isClickable = true
         }

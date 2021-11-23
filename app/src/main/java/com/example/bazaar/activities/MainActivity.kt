@@ -45,7 +45,7 @@ class MainActivity : AppCompatActivity() {
         // set navGraph start destination
         navGraph.startDestination =
                 if(token != "Empty token!"){
-                    R.id.timelinefragment
+                    R.id.timelineFragment
                 } else {
                     R.id.loginFragment
                 }

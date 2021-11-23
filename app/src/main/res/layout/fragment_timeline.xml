@@ -6,8 +6,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/black"
     android:clickable="true"
-    tools:context=".fragments.TimelineFragment"
-    android:focusable="true">
+    android:focusable="true"
+    tools:context=".fragments.TimelineFragment">
 
     <ImageView
         android:id="@+id/imageView"

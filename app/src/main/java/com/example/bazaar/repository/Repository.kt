@@ -15,4 +15,12 @@ class Repository {
     suspend fun resetPassword(request: ResetPasswordRequest): ResetPasswordResponse {
         return RetrofitInstance.api.resetPassword(request)
     }
+
+    suspend fun getProducts(token: String): ProductsListResponse {
+        return RetrofitInstance.api.getProducts(token)
+    }
+
+    suspend fun refreshToken(token: String): RefreshTokenResponse {
+        return RetrofitInstance.api.refreshToken(token)
+    }
 }

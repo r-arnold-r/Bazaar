@@ -13,6 +13,8 @@
     <color name="transparent">#00000000 </color>
     <color name="B_white_op50">#50EEEEEE</color>
     <color name="red">#FF0000</color>
+    <color name="appBarColor">#212121</color>
+    <color name="light_gray">#9A9A9A</color>
     <color name="mtrl_textinput_default_box_stroke_color">#00B5C0</color>
 
 </resources>

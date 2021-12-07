@@ -6,4 +6,10 @@ object Constants {
     const val REGISTER_URL ="user/register"
     const val RESETPASSWORD_URL ="user/reset"
     const val GET_PRODUCT_URL ="products"
+    const val REFRESH_TOKEN_URL = "user/refresh"
+
+    /**
+     * Headers.
+     */
+    const val HEADER_TOKEN = "token"
 }

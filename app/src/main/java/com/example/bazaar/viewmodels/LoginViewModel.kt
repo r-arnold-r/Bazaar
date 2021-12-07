@@ -9,6 +9,7 @@ import com.example.bazaar.manager.SharedPreferencesManager
 import com.example.bazaar.api.model.LoginRequest
 import com.example.bazaar.api.model.User
 import com.example.bazaar.repository.Repository
+import retrofit2.HttpException
 
 class LoginViewModel(val context: Context, private val repository: Repository) : ViewModel() {
     var token: SingleLiveEvent<String> = SingleLiveEvent()
@@ -37,8 +38,18 @@ class LoginViewModel(val context: Context, private val repository: Repository) :
 
             Log.d("LoginViewModel", "token = "  + MyApplication.sharedPreferences.getStringValue(SharedPreferencesManager.KEY_TOKEN, "Empty token!"))
         } catch (e: Exception) {
-            Log.d("LoginViewModel", "LoginViewModel - exception: ${e.toString()}")
-            error.value = e.message.toString()
+            when(e) {
+                is HttpException -> {
+                    if(e.code() == 302) {
+                        Log.d("LoginViewModel", "Token expired: ${e.toString()}")
+                    }
+                }
+                else -> {
+                    Log.d("LoginViewModel", "LoginViewModel - exception: ${e.toString()}")
+                    error.value = e.message.toString()
+                }
+            }
+
         }
     }
 

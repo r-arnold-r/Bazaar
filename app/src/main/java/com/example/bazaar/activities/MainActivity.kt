@@ -2,6 +2,7 @@ package com.example.bazaar.activities
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavOptions
 import androidx.navigation.Navigation
 import androidx.navigation.fragment.NavHostFragment
@@ -10,14 +11,18 @@ import com.example.bazaar.MyApplication
 import com.example.bazaar.R
 import com.example.bazaar.databinding.ActivityMainBinding
 import com.example.bazaar.manager.SharedPreferencesManager
+import com.example.bazaar.viewmodels.MainActivityViewModel
 
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
+    private lateinit var viewModel : MainActivityViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        viewModel = ViewModelProvider(this)[MainActivityViewModel::class.java]
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         val view = binding.root

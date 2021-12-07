@@ -47,11 +47,20 @@
             android:id="@+id/action_timelineFragment_to_loginFragment"
             app:destination="@id/loginFragment" />
         <action
+            android:id="@+id/action_timelineFragment_to_loginFragment_without_keeping"
+            app:destination="@id/loginFragment"
+
+            app:popUpTo="@+id/timelineFragment"
+            app:popUpToInclusive="true" />
+        <action
             android:id="@+id/action_timelineFragment_to_myFaresFragment"
             app:destination="@id/myFaresFragment" />
         <action
             android:id="@+id/action_timelineFragment_to_myMarketFragment"
             app:destination="@id/myMarketFragment" />
+        <action
+            android:id="@+id/action_timelineFragment_to_productDetailFragment"
+            app:destination="@id/productDetailFragment" />
     </fragment>
     <fragment
         android:id="@+id/myFaresFragment"
@@ -76,5 +85,14 @@
         <action
             android:id="@+id/action_myMarketFragment_to_myFaresFragment"
             app:destination="@id/myFaresFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/productDetailFragment"
+        android:name="com.example.bazaar.fragments.ProductDetailFragment"
+        android:label="fragment_product_detail"
+        tools:layout="@layout/fragment_product_detail" >
+        <action
+            android:id="@+id/action_productDetailFragment_to_timelineFragment"
+            app:destination="@id/timelineFragment" />
     </fragment>
 </navigation>

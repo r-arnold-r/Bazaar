@@ -6,6 +6,8 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ArrayAdapter
+import android.widget.Spinner
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -85,6 +87,19 @@ class TimelineFragment : Fragment() , ProductAdapter.ItemClickListener{
         getProductsViewModelProductsObservable(view)
         makeBottomNavigationVisible()
 
+
+        // Create an ArrayAdapter using the string array and a default spinner layout
+        ArrayAdapter.createFromResource(
+                requireContext(),
+                R.array.spinner_mode,
+                android.R.layout.simple_spinner_item
+        ).also { adapter ->
+            // Specify the layout to use when the list of choices appears
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+            // Apply the adapter to the spinner
+            binding.spinner.adapter = adapter
+        }
+
         return view
     }
     /** Shows error message to user on unsuccessful get products **/
@@ -154,6 +169,7 @@ class TimelineFragment : Fragment() , ProductAdapter.ItemClickListener{
                 R.id.nav_settings -> {
                     // Save profile changes
                     Toast.makeText(requireContext(), "Click Settings Icon.", Toast.LENGTH_SHORT).show()
+                    findNavController().navigate(R.id.action_timelineFragment_to_settingsFragment)
                     true
                 }
                 else -> false

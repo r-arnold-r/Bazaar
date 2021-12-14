@@ -61,6 +61,9 @@
         <action
             android:id="@+id/action_timelineFragment_to_productDetailFragment"
             app:destination="@id/productDetailFragment" />
+        <action
+            android:id="@+id/action_timelineFragment_to_settingsFragment"
+            app:destination="@id/settingsFragment" />
     </fragment>
     <fragment
         android:id="@+id/myFaresFragment"
@@ -85,6 +88,12 @@
         <action
             android:id="@+id/action_myMarketFragment_to_myFaresFragment"
             app:destination="@id/myFaresFragment" />
+        <action
+            android:id="@+id/action_myMarketFragment_to_createYourFareFragment"
+            app:destination="@id/createYourFareFragment" />
+        <action
+            android:id="@+id/action_myMarketFragment_to_settingsFragment"
+            app:destination="@id/settingsFragment" />
     </fragment>
     <fragment
         android:id="@+id/productDetailFragment"
@@ -94,5 +103,26 @@
         <action
             android:id="@+id/action_productDetailFragment_to_timelineFragment"
             app:destination="@id/timelineFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/settingsFragment"
+        android:name="com.example.bazaar.fragments.SettingsFragment"
+        android:label="fragment_settings"
+        tools:layout="@layout/fragment_settings" >
+        <action
+            android:id="@+id/action_settingsFragment_to_timelineFragment"
+            app:destination="@id/timelineFragment" />
+        <action
+            android:id="@+id/action_settingsFragment_to_myMarketFragment"
+            app:destination="@id/myMarketFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/createYourFareFragment"
+        android:name="com.example.bazaar.fragments.CreateYourFareFragment"
+        android:label="fragment_create_your_fare"
+        tools:layout="@layout/fragment_create_your_fare" >
+        <action
+            android:id="@+id/action_createYourFareFragment_to_myMarketFragment"
+            app:destination="@id/myMarketFragment" />
     </fragment>
 </navigation>

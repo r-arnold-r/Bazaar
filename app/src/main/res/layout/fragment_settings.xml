@@ -71,7 +71,8 @@
                 android:layout_marginEnd="56dp"
                 android:layout_marginRight="56dp"
                 android:hint="Email"
-                android:theme="@style/LoginTextInputLayout"
+                style="@style/LoginTextInputLayout"
+                app:boxStrokeColor="@color/selector_edit_text_border_login"
                 app:endIconDrawable="@drawable/ic_eye"
                 app:endIconMode="custom"
                 app:endIconTint="@color/selector_icon_input_layout_color"
@@ -84,7 +85,10 @@
                     android:layout_width="match_parent"
                     android:layout_height="56dp"
                     android:singleLine="true"
-                    android:textSize="14sp" />
+                    android:textSize="14sp"
+                    android:theme="@style/EditTextCreateLogin"
+                    android:textColor="@color/white"
+                    android:textColorHint="@color/white"/>
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
@@ -97,7 +101,8 @@
                 android:layout_marginEnd="56dp"
                 android:layout_marginRight="56dp"
                 android:hint="Username"
-                android:theme="@style/LoginTextInputLayout"
+                style="@style/LoginTextInputLayout"
+                app:boxStrokeColor="@color/selector_edit_text_border_login"
                 app:endIconDrawable="@drawable/ic_eye"
                 app:endIconMode="custom"
                 app:endIconTint="@color/selector_icon_input_layout_color"
@@ -110,7 +115,10 @@
                     android:layout_width="match_parent"
                     android:layout_height="56dp"
                     android:singleLine="true"
-                    android:textSize="14sp" />
+                    android:textSize="14sp"
+                    android:theme="@style/EditTextCreateLogin"
+                    android:textColor="@color/white"
+                    android:textColorHint="@color/white"/>
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
@@ -123,7 +131,8 @@
                 android:layout_marginEnd="56dp"
                 android:layout_marginRight="56dp"
                 android:hint="Phone number"
-                android:theme="@style/LoginTextInputLayout"
+                style="@style/LoginTextInputLayout"
+                app:boxStrokeColor="@color/selector_edit_text_border_login"
                 app:endIconDrawable="@drawable/ic_eye"
                 app:endIconMode="custom"
                 app:endIconTint="@color/selector_icon_input_layout_color"
@@ -136,7 +145,10 @@
                     android:layout_width="match_parent"
                     android:layout_height="56dp"
                     android:singleLine="true"
-                    android:textSize="14sp" />
+                    android:textSize="14sp"
+                    android:theme="@style/EditTextCreateLogin"
+                    android:textColor="@color/white"
+                    android:textColorHint="@color/white"/>
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
@@ -149,7 +161,8 @@
                 android:layout_marginEnd="56dp"
                 android:layout_marginRight="56dp"
                 android:hint="Password"
-                android:theme="@style/LoginTextInputLayout"
+                style="@style/LoginTextInputLayout"
+                app:boxStrokeColor="@color/selector_edit_text_border_login"
                 app:endIconDrawable="@drawable/ic_eye"
                 app:endIconMode="custom"
                 app:endIconTint="@color/selector_icon_input_layout_color"
@@ -162,7 +175,10 @@
                     android:layout_width="match_parent"
                     android:layout_height="56dp"
                     android:singleLine="true"
-                    android:textSize="14sp" />
+                    android:textSize="14sp"
+                    android:theme="@style/EditTextCreateLogin"
+                    android:textColor="@color/white"
+                    android:textColorHint="@color/white"/>
             </com.google.android.material.textfield.TextInputLayout>
 
 

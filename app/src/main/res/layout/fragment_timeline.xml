@@ -7,6 +7,7 @@
     android:background="@color/B_white"
     android:clickable="true"
     android:focusable="true"
+    android:layout_marginBottom="50dp"
     tools:context=".fragments.TimelineFragment">
 
     <com.google.android.material.appbar.AppBarLayout

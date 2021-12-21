@@ -110,6 +110,7 @@ class TimelineFragment : Fragment() , ProductAdapter.ItemClickListener{
             if(productsViewModel.error.value == "302"){
                 lifecycleScope.launch {
                     refreshTokenViewModel.refreshToken()
+                    getProducts()
                 }
             }
 

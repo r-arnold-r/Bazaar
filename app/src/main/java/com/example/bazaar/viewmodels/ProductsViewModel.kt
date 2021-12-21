@@ -46,7 +46,7 @@ class ProductsViewModel (val context: Context, val repository: Repository) : Vie
                 }
                 else -> {
                     error.value = e.message.toString()
-                    Log.d("ProductsViewModel", "ProductsViewModel - exception: ${e.toString()}")
+                    Log.d("ProductsViewModel", "exception: ${e.toString()}")
                 }
             }
         }

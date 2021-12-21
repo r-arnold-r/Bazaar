@@ -10,4 +10,15 @@
         <item>Time</item>
     </string-array>
 
+    <string-array name="price_amount_array">
+        <item>RON</item>
+        <item>EUR</item>
+        <item>HUF</item>
+    </string-array>
+
+    <string-array name="available_amount_array">
+        <item>L</item>
+        <item>Kg</item>
+    </string-array>
+
 </resources>

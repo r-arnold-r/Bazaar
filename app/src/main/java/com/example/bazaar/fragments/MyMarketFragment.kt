@@ -42,6 +42,7 @@ class MyMarketFragment : Fragment() {
             // back button pressed
             findNavController().navigate(R.id.action_myMarketFragment_to_timelineFragment)
         }
+        createYourFareFABHandler()
 
         return view
     }

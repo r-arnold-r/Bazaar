@@ -13,19 +13,19 @@ data class Product(val rating : Double, val amount_type : String, val price_type
 
 @JsonClass(generateAdapter = true)
     data class ProductResponse (
-            val rating : Double,
-            val amount_type : String,
-            val price_type : String,
-            val product_id : String,
-            val username : String,
-            val is_active : Boolean,
-            val price_per_unit : String,
-            val units : String,
-            val description : String,
-            val title : String,
-            val images : List<String>,
-            val creation_time : Long,
-            val messages : List<String>
+        val rating : Double,
+        var amount_type : String,
+        var price_type : String,
+        val product_id : String,
+        val username : String,
+        val is_active : Boolean,
+        var price_per_unit : String,
+        val units : String,
+        var description : String,
+        var title : String,
+        val images : List<String>,
+        val creation_time : Long,
+        val messages : List<String>
     )
 
     @JsonClass(generateAdapter = true)

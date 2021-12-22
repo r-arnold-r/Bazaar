@@ -15,7 +15,10 @@ interface MarketApi {
     suspend fun resetPassword(@Body request: ResetPasswordRequest): ResetPasswordResponse
 
     @GET(Constants.GET_PRODUCT_URL)
-    suspend fun getProducts(@Header(Constants.HEADER_TOKEN) token: String): ProductsListResponse
+    suspend fun getProducts(@Header(Constants.HEADER_TOKEN) token: String,
+                            @Header(Constants.HEADER_FILTER) filter: String,
+                            @Header(Constants.HEADER_SORT) sort: String,
+                            @Header(Constants.HEADER_LIMIT) limit: Int): ProductsListResponse
 
     @GET(Constants.REFRESH_TOKEN_URL)
     suspend fun refreshToken(@Header(Constants.HEADER_TOKEN) token: String): RefreshTokenResponse

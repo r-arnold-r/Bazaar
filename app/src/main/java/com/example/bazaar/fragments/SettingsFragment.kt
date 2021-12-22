@@ -32,7 +32,10 @@ class SettingsFragment : Fragment() {
         // Inflate the layout for this fragment
         _binding = FragmentSettingsBinding.inflate(inflater, container, false)
         val view = binding.root
+
+        // back arrow
         binding.toolbar.setNavigationIcon(R.drawable.ic_toolbar_arrow)
+
         binding.toolbar.setNavigationOnClickListener {
             // back button pressed
             findNavController().navigateUp()
@@ -40,6 +43,7 @@ class SettingsFragment : Fragment() {
 
         return view
     }
+
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

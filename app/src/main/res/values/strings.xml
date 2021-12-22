@@ -8,6 +8,7 @@
     <string-array name="spinner_mode">
         <item>Seller</item>
         <item>Time</item>
+        <item>Product</item>
     </string-array>
 
     <string-array name="price_amount_array">
@@ -19,6 +20,7 @@
     <string-array name="available_amount_array">
         <item>L</item>
         <item>Kg</item>
+        <item>Db</item>
     </string-array>
 
 </resources>

@@ -146,6 +146,7 @@ class CreateYourFareFragment : Fragment() {
     private fun addProductSuccessful(){
         addProductViewModel.response.observe(viewLifecycleOwner){
             Log.d("yyy", "success: ${addProductViewModel.response.value}")
+            findNavController().navigate(R.id.action_createYourFareFragment_to_myMarketFragment)
             binding.launchMyFareBtn.isClickable = true
         }
     }

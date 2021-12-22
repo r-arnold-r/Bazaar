@@ -17,8 +17,11 @@ class Repository {
         return RetrofitInstance.api.resetPassword(request)
     }
 
-    suspend fun getProducts(token: String): ProductsListResponse {
-        return RetrofitInstance.api.getProducts(token)
+    suspend fun getProducts(token: String
+                            ,filter: String = ""//"{\"username\":\"Sutyii\"}"
+                            ,sort: String = ""//"{\"title\" : 1 }"
+                            ,limit: Int = 1000, ): ProductsListResponse {
+        return RetrofitInstance.api.getProducts(token,filter, sort, limit)
     }
 
     suspend fun refreshToken(token: String): RefreshTokenResponse {

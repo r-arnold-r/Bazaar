@@ -3,6 +3,7 @@ package com.example.bazaar.viewmodels
 import android.content.Context
 import android.util.Log
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.bazaar.MyApplication
@@ -18,15 +19,23 @@ class ProductsViewModel (val context: Context, val repository: Repository) : Vie
     var error: SingleLiveEvent<String> = SingleLiveEvent()
     var success: SingleLiveEvent<Boolean> = SingleLiveEvent()
 
-    suspend fun getProducts() {
+    val filter: MutableLiveData<String> by lazy {
+        MutableLiveData<String>()
+    }
+    val sort: MutableLiveData<String> by lazy {
+        MutableLiveData<String>()
+    }
 
+    suspend fun getProducts() {
 
         val token = MyApplication.sharedPreferences.getStringValue(
                 SharedPreferencesManager.KEY_TOKEN,
                 "Empty token!"
         )
         try {
-            products.value = repository.getProducts(token.toString())
+
+            products.value = repository.getProducts(token.toString(), filter.value.toString(), sort.value.toString())
+            removeSpecialCharacters()
             success.value = true
 
             Log.d("ProductsViewModel", "token = "  + MyApplication.sharedPreferences.getStringValue(
@@ -51,5 +60,16 @@ class ProductsViewModel (val context: Context, val repository: Repository) : Vie
             }
         }
 
+    }
+
+    private fun removeSpecialCharacters()
+    {
+        for (i in products.value!!.products.indices) {
+            products.value!!.products[i].title = products.value!!.products[i].title.replace("\"", "")
+            products.value!!.products[i].price_type = products.value!!.products[i].price_type.replace("\"", "")
+            products.value!!.products[i].amount_type = products.value!!.products[i].amount_type.replace("\"", "")
+            products.value!!.products[i].description = products.value!!.products[i].description.replace("\"", "")
+            products.value!!.products[i].price_per_unit = products.value!!.products[i].price_per_unit.replace("\"", "")
+        }
     }
 }

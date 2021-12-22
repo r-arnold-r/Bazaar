@@ -1,14 +1,10 @@
 package com.example.bazaar.fragments
 
-import android.annotation.SuppressLint
+import android.app.Dialog
 import android.os.Bundle
 import android.util.Log
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import android.widget.ArrayAdapter
-import android.widget.Spinner
-import android.widget.Toast
+import android.view.*
+import android.widget.*
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
@@ -27,6 +23,7 @@ import com.example.bazaar.api.model.User
 import com.example.bazaar.databinding.FragmentTimelineBinding
 import com.example.bazaar.manager.SharedPreferencesManager
 import com.example.bazaar.repository.Repository
+import com.example.bazaar.utils.ApiString
 import com.example.bazaar.viewmodels.*
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.launch
@@ -53,6 +50,7 @@ class TimelineFragment : Fragment() , ProductAdapter.ItemClickListener{
     private lateinit var recyclerView: RecyclerView
     private lateinit var productAdapter: ProductAdapter
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Log.d("xxx", "user = " + MyApplication.sharedPreferences.getUserValue(
@@ -74,20 +72,27 @@ class TimelineFragment : Fragment() , ProductAdapter.ItemClickListener{
         _binding = FragmentTimelineBinding.inflate(inflater, container, false)
         val view = binding.root
 
-        val viewModel: MainActivityViewModel by activityViewModels()
+        //val viewModel: MainActivityViewModel by activityViewModels()
 
-        if(viewModel.products == null){
+        //if(viewModel.products == null){
             getProducts()
-        }
-        else{
-            productsViewModel.products.value = viewModel.products
-        }
+        //}
+        //else{
+        //    productsViewModel.products.value = viewModel.products
+        //}
 
         getProductsViewModelErrorObservable()
         getProductsViewModelProductsObservable(view)
         makeBottomNavigationVisible()
+        arrayAdapterHandler()
+        productsViewModelSortObservable()
+        productsViewModelFilterObservable()
 
+        return view
+    }
 
+    private fun arrayAdapterHandler()
+    {
         // Create an ArrayAdapter using the string array and a default spinner layout
         ArrayAdapter.createFromResource(
                 requireContext(),
@@ -100,8 +105,71 @@ class TimelineFragment : Fragment() , ProductAdapter.ItemClickListener{
             binding.spinner.adapter = adapter
         }
 
-        return view
+        binding.spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+
+            }
+
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                when (position) {
+                    0 -> {
+
+                        if (productsViewModel.sort.value != null) {
+                            val mapOfSort = mutableMapOf<String, String>()
+                            mapOfSort["username"] = "1"
+
+                            val sorter = ApiString.Builder()
+                                    .map(mapOfSort)
+                                    .build()
+
+                            productsViewModel.sort.value = sorter.getString()
+                        }
+
+                        true
+                    }
+                    1 -> {
+
+                        val mapOfSort = mutableMapOf<String, String>()
+                        mapOfSort["creation_time"] = "1"
+
+                        val sorter = ApiString.Builder()
+                                .map(mapOfSort)
+                                .build()
+
+                        productsViewModel.sort.value = sorter.getString()
+                        true
+                    }
+                    2 -> {
+
+                        val mapOfSort = mutableMapOf<String, String>()
+                        mapOfSort["title"] = "1"
+
+                        val sorter = ApiString.Builder()
+                                .map(mapOfSort)
+                                .build()
+
+                        productsViewModel.sort.value = sorter.getString()
+                        true
+                    }
+                    else -> false
+                }
+            }
+
+        }
     }
+
+    private fun productsViewModelSortObservable(){
+        productsViewModel.sort.observe(viewLifecycleOwner){
+            getProducts()
+        }
+    }
+
+    private fun productsViewModelFilterObservable(){
+        productsViewModel.filter.observe(viewLifecycleOwner){
+            getProducts()
+        }
+    }
+
     /** Shows error message to user on unsuccessful get products **/
     private fun getProductsViewModelErrorObservable(){
         productsViewModel.error.observe(viewLifecycleOwner){
@@ -127,22 +195,15 @@ class TimelineFragment : Fragment() , ProductAdapter.ItemClickListener{
     /** ToDo: Give description **/
     private fun getProductsViewModelProductsObservable(view: View){
         productsViewModel.products.observe(viewLifecycleOwner){
-            // shows message
-            //Snackbar.make(requireView(), productsViewModel.products.value.toString(), Snackbar.LENGTH_LONG).show()
 
             val viewModel: MainActivityViewModel by activityViewModels()
             viewModel.products = productsViewModel.products.value
 
-            Log.d("xxx", productsViewModel.products.value?.item_count.toString())
-            for (item in productsViewModel.products.value?.products!!){
-                Log.d("xxx", item.toString())
-            }
-            Log.d("xxx", productsViewModel.products.value?.timestamp.toString())
+            binding.numberOfFairsTv.text = viewModel.products?.item_count.toString() + " Fairs"
 
             recycleViewAndAdapterHandler(view, productsViewModel.products.value?.products!!.toMutableList())
         }
     }
-
 
     private fun getProducts(){
         // attempt to get products inside lifecycleScope
@@ -165,6 +226,7 @@ class TimelineFragment : Fragment() , ProductAdapter.ItemClickListener{
                 R.id.nav_filter -> {
                     // Save profile changes
                     Toast.makeText(requireContext(), "Click Filter Icon.", Toast.LENGTH_SHORT).show()
+                    showFilterDialog()
                     true
                 }
                 R.id.nav_settings -> {
@@ -179,13 +241,67 @@ class TimelineFragment : Fragment() , ProductAdapter.ItemClickListener{
 
     }
 
+    private fun showFilterDialog(){
+        val dialog = Dialog(requireActivity())
+        //dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+        dialog.setCancelable(false)
+        dialog.setContentView(R.layout.dialog_layout)
+        dialog.window!!.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
+        val titleEt: EditText = dialog.findViewById(R.id.title_et)
+        val priceEt: EditText = dialog.findViewById(R.id.price_et)
+        val unitEt: EditText = dialog.findViewById(R.id.unit_et)
+        val unitsEt: EditText = dialog.findViewById(R.id.units_et)
+        val amountEt: EditText = dialog.findViewById(R.id.amount_et)
+
+        val filterBtn: Button = dialog.findViewById(R.id.filter_btn) as Button
+        filterBtn.setOnClickListener{
+
+            val mapOfFilter = mutableMapOf<String, String>()
+
+            if(titleEt.text.trim().isNotEmpty()) {
+                mapOfFilter["title"] = titleEt.text.toString()
+            }
+            if(priceEt.text.trim().isNotEmpty()) {
+                mapOfFilter["price_per_unit"] = priceEt.text.toString()
+            }
+            if(unitEt.text.trim().isNotEmpty()) {
+                mapOfFilter["price_type"] = unitEt.text.toString()
+            }
+            if(unitsEt.text.trim().isNotEmpty()) {
+                mapOfFilter["units"] = unitsEt.text.toString()
+            }
+            if(amountEt.text.trim().isNotEmpty()) {
+                mapOfFilter["amount_type"] = amountEt.text.toString()
+            }
+
+            val filter = ApiString.Builder()
+                    .map(mapOfFilter)
+                    .build()
+
+            if(filter.getString().trim().isNotEmpty())
+            {
+                productsViewModel.filter.value = filter.getString()
+            }
+            else{
+                productsViewModel.filter.value = ""
+            }
+
+            dialog.dismiss()
+        }
+
+        val closeBtn: Button = dialog.findViewById(R.id.close_btn) as Button
+        closeBtn.setOnClickListener{ dialog.dismiss() }
+
+        dialog.show()
+    }
+
     private fun recycleViewAndAdapterHandler(view: View, products: MutableList<ProductResponse>)
     {
         //creating and setting up adapter with recyclerView
         recyclerView = binding.recyclerViewProducts
 
         //creating and setting up adapter with recyclerView
-        productAdapter = ProductAdapter(view, this, products) //setting the data and listener for adapter
+        productAdapter = ProductAdapter(view, this, products, R.layout.product_item) //setting the data and listener for adapter
 
         val layoutManager: RecyclerView.LayoutManager =
                 LinearLayoutManager(activity, RecyclerView.VERTICAL, false)
@@ -193,15 +309,20 @@ class TimelineFragment : Fragment() , ProductAdapter.ItemClickListener{
         recyclerView.itemAnimator = DefaultItemAnimator()
         recyclerView.adapter = productAdapter
 
-        recyclerView.addItemDecoration(
-                MarginItemDecoration(
-                        resources.getDimensionPixelSize(R.dimen.dimen_margin_horizontal_in_dp),
-                        resources.getDimensionPixelSize(R.dimen.dimen_margin_vertical_in_dp)
-                )
-        )
+        val viewModel: MainActivityViewModel by activityViewModels()
+
+        if(viewModel.products == null){
+            recyclerView.addItemDecoration(
+                    MarginItemDecoration(
+                            resources.getDimensionPixelSize(R.dimen.dimen_margin_horizontal_in_dp),
+                            resources.getDimensionPixelSize(R.dimen.dimen_margin_vertical_in_dp)
+                    )
+            )
+        }
 
         productAdapter.notifyDataSetChanged()
     }
+
 
     private fun makeBottomNavigationVisible(){
         (activity as MainActivity).getBinding().bottomNavigation.visibility = View.VISIBLE
@@ -210,6 +331,8 @@ class TimelineFragment : Fragment() , ProductAdapter.ItemClickListener{
     private fun clearToolbarMenu() {
         binding.toolbar.menu.clear()
     }
+
+
 
     override fun onItemClick(position: Int) {
         Log.d("xxx", "onItemClick: $position")

@@ -12,4 +12,8 @@ object Constants {
      * Headers.
      */
     const val HEADER_TOKEN = "token"
+    const val HEADER_SORT = "sort"
+    const val HEADER_LIMIT = "limit"
+    const val HEADER_FILTER = "filter"
+    const val HEADER_SKIP = "skip"
 }

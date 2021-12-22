@@ -2,18 +2,19 @@ package com.example.bazaar.adapter
 
 import android.annotation.SuppressLint
 import android.graphics.Color
-import android.text.method.ScrollingMovementMethod
+import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
-import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import androidx.appcompat.widget.AppCompatButton
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.example.bazaar.R
 import com.example.bazaar.api.model.ProductResponse
 import de.hdodenhof.circleimageview.CircleImageView
+
 
 class ProductAdapter(
         private val view: View,
@@ -21,7 +22,18 @@ class ProductAdapter(
         private var products: MutableList<ProductResponse>,
         private val itemViewInt: Int
 )
-    : RecyclerView.Adapter<ProductAdapter.DataViewHolder>() {
+    : RecyclerView.Adapter<ProductAdapter.DataViewHolder>(), Filterable {
+
+    var productsFilterList = ArrayList<ProductResponse>()
+
+    init {
+        productsFilterList = products as ArrayList<ProductResponse>
+    }
+
+    fun getItemData (position : Int) : ProductResponse
+    {
+        return productsFilterList[position]
+    }
 
     override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): DataViewHolder {
         val itemView =
@@ -32,13 +44,13 @@ class ProductAdapter(
     @SuppressLint("ClickableViewAccessibility")
     override fun onBindViewHolder(holder: DataViewHolder, position: Int) {
 
-        val productPricePerQuantityStr = products[position].price_per_unit.toString() + " " + products[position].price_type.toString() + "/" + products[position].amount_type.toString()
+        val productPricePerQuantityStr = productsFilterList[position].price_per_unit.toString() + " " + productsFilterList[position].price_type.toString() + "/" + productsFilterList[position].amount_type.toString()
         holder.productPricePerQuantityTv.text = productPricePerQuantityStr
 
-        holder.productNameTv.text = products[position].title
-        holder.profileNameTv.text = products[position].username
+        holder.productNameTv.text = productsFilterList[position].title
+        holder.profileNameTv.text = productsFilterList[position].username
 
-        if(products[position].is_active){
+        if(productsFilterList[position].is_active){
             holder.checkIv?.setImageResource(R.drawable.ic_checkmark)
             holder.aiTv?.text = "Active"
             holder.aiTv?.setTextColor(Color.parseColor("#00B5C0"))
@@ -52,19 +64,26 @@ class ProductAdapter(
 
         holder.orderNowBtn?.setOnClickListener{
 
-            Log.d("xxx", "Product was clicked for order: " + products[position].toString())
+            Log.d("xxx", "Product was clicked for order: " + productsFilterList[position].toString())
+        }
+
+        holder.profileImageCiV.setOnClickListener{
+            val bundle = Bundle()
+            bundle.putString("username", holder.profileNameTv.text.toString())
+            view.findNavController().navigate(R.id.settingsFragment, bundle)
         }
 
     }
 
     override fun getItemCount(): Int {
-        return products.size
+        return productsFilterList.size
     }
 
     class DataViewHolder(view: View, itemClickListener: ItemClickListener?) :
             RecyclerView.ViewHolder(view), View.OnClickListener {
 
         var productImageCiV: CircleImageView = view.findViewById(R.id.product_image_civ)
+        var profileImageCiV: CircleImageView = view.findViewById(R.id.profile_image_civ)
         var productPricePerQuantityTv: TextView = view.findViewById(R.id.product_price_per_quantity_tv)
         var profileNameTv: TextView = view.findViewById(R.id.profile_name_tv)
         var productNameTv: TextView = view.findViewById(R.id.product_name_tv)
@@ -90,5 +109,31 @@ class ProductAdapter(
     }
 
 
+    override fun getFilter(): Filter {
+        return object : Filter() {
+            override fun performFiltering(constraint: CharSequence?): FilterResults {
+                val charSearch = constraint.toString()
+                productsFilterList = if (charSearch == "") {
+                    products as ArrayList<ProductResponse>
+                } else {
+                    val resultList = ArrayList<ProductResponse>()
+                    for (row in products) {
+                        if (row.title.toLowerCase().contains(constraint.toString().toLowerCase())) {
+                            resultList.add(row)
+                        }
+                    }
+                    resultList
+                }
+                val filterResults = FilterResults()
+                filterResults.values = productsFilterList
+                return filterResults
+            }
+
+            override fun publishResults(constraint: CharSequence?, results: FilterResults?) {
+                productsFilterList = results?.values as ArrayList<ProductResponse>
+                notifyDataSetChanged()
+            }
+        }
+    }
 
 }

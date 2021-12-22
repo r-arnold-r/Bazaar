@@ -2,6 +2,8 @@ package com.example.bazaar.fragments
 
 import android.app.Dialog
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.view.*
 import android.widget.*
@@ -46,6 +48,7 @@ class TimelineFragment : Fragment() , ProductAdapter.ItemClickListener{
 
     private lateinit var productsViewModel: ProductsViewModel
     private lateinit var refreshTokenViewModel: RefreshTokenViewModel
+    private var recyclerViewDecorated = false
 
     private lateinit var recyclerView: RecyclerView
     private lateinit var productAdapter: ProductAdapter
@@ -72,7 +75,7 @@ class TimelineFragment : Fragment() , ProductAdapter.ItemClickListener{
         _binding = FragmentTimelineBinding.inflate(inflater, container, false)
         val view = binding.root
 
-        //val viewModel: MainActivityViewModel by activityViewModels()
+        val viewModel: MainActivityViewModel by activityViewModels()
 
         //if(viewModel.products == null){
             getProducts()
@@ -87,8 +90,31 @@ class TimelineFragment : Fragment() , ProductAdapter.ItemClickListener{
         arrayAdapterHandler()
         productsViewModelSortObservable()
         productsViewModelFilterObservable()
+        searchViewHandler()
 
         return view
+    }
+
+    private fun searchViewHandler(){
+        binding.searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+
+            override fun onQueryTextChange(newText: String): Boolean {
+                productAdapter.filter.filter(newText)
+
+                Handler(Looper.getMainLooper()).postDelayed({
+                    binding.numberOfFairsTv.text = productAdapter.productsFilterList.count().toString() + " Fairs"
+                    Log.d("XYX", productAdapter.itemCount.toString())
+                }, 100)
+
+                return false
+            }
+
+            override fun onQueryTextSubmit(query: String): Boolean {
+                // task HERE
+                return false
+            }
+
+        })
     }
 
     private fun arrayAdapterHandler()
@@ -219,20 +245,23 @@ class TimelineFragment : Fragment() , ProductAdapter.ItemClickListener{
         binding.toolbar.setOnMenuItemClickListener {
             when (it.itemId) {
                 R.id.nav_search -> {
-                    // Navigate to settings screen
-                    Toast.makeText(requireContext(), "Click Search Icon.", Toast.LENGTH_SHORT).show()
+                    if (binding.searchView.visibility == View.GONE) {
+                        binding.searchView.visibility = View.VISIBLE
+                    } else {
+                        binding.searchView.visibility = View.GONE
+                    }
+
                     true
                 }
                 R.id.nav_filter -> {
-                    // Save profile changes
-                    Toast.makeText(requireContext(), "Click Filter Icon.", Toast.LENGTH_SHORT).show()
                     showFilterDialog()
                     true
                 }
                 R.id.nav_settings -> {
-                    // Save profile changes
-                    Toast.makeText(requireContext(), "Click Settings Icon.", Toast.LENGTH_SHORT).show()
-                    findNavController().navigate(R.id.action_timelineFragment_to_settingsFragment)
+                    val bundle = Bundle()
+                    bundle.putString("username",  MyApplication.sharedPreferences.getUserValue(
+                            SharedPreferencesManager.KEY_USER, User()).username)
+                    findNavController().navigate(R.id.action_timelineFragment_to_settingsFragment, bundle)
                     true
                 }
                 else -> false
@@ -245,8 +274,8 @@ class TimelineFragment : Fragment() , ProductAdapter.ItemClickListener{
         val dialog = Dialog(requireActivity())
         //dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
         dialog.setCancelable(false)
-        dialog.setContentView(R.layout.dialog_layout)
-        dialog.window!!.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
+        dialog.setContentView(R.layout.dialog_timeline_filter)
+        dialog.window!!.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN)
         val titleEt: EditText = dialog.findViewById(R.id.title_et)
         val priceEt: EditText = dialog.findViewById(R.id.price_et)
         val unitEt: EditText = dialog.findViewById(R.id.unit_et)
@@ -309,15 +338,14 @@ class TimelineFragment : Fragment() , ProductAdapter.ItemClickListener{
         recyclerView.itemAnimator = DefaultItemAnimator()
         recyclerView.adapter = productAdapter
 
-        val viewModel: MainActivityViewModel by activityViewModels()
-
-        if(viewModel.products == null){
+        if(!recyclerViewDecorated){
             recyclerView.addItemDecoration(
                     MarginItemDecoration(
                             resources.getDimensionPixelSize(R.dimen.dimen_margin_horizontal_in_dp),
                             resources.getDimensionPixelSize(R.dimen.dimen_margin_vertical_in_dp)
                     )
             )
+            recyclerViewDecorated = true
         }
 
         productAdapter.notifyDataSetChanged()
@@ -332,11 +360,10 @@ class TimelineFragment : Fragment() , ProductAdapter.ItemClickListener{
         binding.toolbar.menu.clear()
     }
 
-
-
     override fun onItemClick(position: Int) {
-        Log.d("xxx", "onItemClick: $position")
-        findNavController().navigate(R.id.action_timelineFragment_to_productDetailFragment)
+        val bundle = Bundle()
+        bundle.putParcelable("productResponse", productAdapter.getItemData(position))
+        findNavController().navigate(R.id.action_timelineFragment_to_productDetailFragment, bundle)
     }
 
 }

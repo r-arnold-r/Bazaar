@@ -16,7 +16,7 @@ import retrofit2.HttpException
 
 class ProductsViewModel (val context: Context, val repository: Repository) : ViewModel() {
     val products: SingleLiveEvent<ProductsListResponse> = SingleLiveEvent()
-    var error: SingleLiveEvent<String> = SingleLiveEvent()
+    var error: MutableLiveData<String> = MutableLiveData()
     var success: SingleLiveEvent<Boolean> = SingleLiveEvent()
 
     val filter: MutableLiveData<String> by lazy {
@@ -52,6 +52,10 @@ class ProductsViewModel (val context: Context, val repository: Repository) : Vie
                         error.value = "301"
                         Log.d("ProductsViewModel", "Invalid token: ${e.toString()}")
                     }
+                    else{
+                        Log.d("ProductsViewModel", "AddProductViewModel - exception: ${e.toString()}")
+                        error.value = e.message.toString()
+                    }
                 }
                 else -> {
                     error.value = e.message.toString()
@@ -70,6 +74,7 @@ class ProductsViewModel (val context: Context, val repository: Repository) : Vie
             products.value!!.products[i].amount_type = products.value!!.products[i].amount_type.replace("\"", "")
             products.value!!.products[i].description = products.value!!.products[i].description.replace("\"", "")
             products.value!!.products[i].price_per_unit = products.value!!.products[i].price_per_unit.replace("\"", "")
+            products.value!!.products[i].units = products.value!!.products[i].units.replace("\"", "")
         }
     }
 }

@@ -1,8 +1,10 @@
 package com.example.bazaar.api.model
 
 import android.media.Image
+import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
 import com.squareup.moshi.JsonClass
+import kotlinx.parcelize.Parcelize
 import retrofit2.http.Field
 
 data class Products(val item_count: Int, val products : List<ProductResponse>, val timestamp: Long)
@@ -11,6 +13,7 @@ data class Product(val rating : Double, val amount_type : String, val price_type
                    val username : String, val is_active : Boolean, val price_per_unit : Int, val units : Int,
                    val description : String, val title : String, val images : List<String>, val creation_time : Long, val messages : List<String>)
 
+@Parcelize
 @JsonClass(generateAdapter = true)
     data class ProductResponse (
         val rating : Double,
@@ -20,20 +23,27 @@ data class Product(val rating : Double, val amount_type : String, val price_type
         val username : String,
         val is_active : Boolean,
         var price_per_unit : String,
-        val units : String,
+        var units : String,
         var description : String,
         var title : String,
         val images : List<String>,
         val creation_time : Long,
         val messages : List<String>
-    )
+    ) : Parcelable
 
-    @JsonClass(generateAdapter = true)
+@JsonClass(generateAdapter = true)
     data class ProductsListResponse(
         val item_count : Int,
         val products : List<ProductResponse>,
         val timestamp : Long
     )
+
+@JsonClass(generateAdapter = true)
+data class RemoveProductResponse(
+        val message : String,
+        val product_id: String,
+        val deletion_time : Long
+)
 
     @JsonClass(generateAdapter = true)
     data class RefreshTokenResponse(

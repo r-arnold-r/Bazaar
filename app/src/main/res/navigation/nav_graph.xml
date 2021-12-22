@@ -94,6 +94,9 @@
         <action
             android:id="@+id/action_myMarketFragment_to_settingsFragment"
             app:destination="@id/settingsFragment" />
+        <action
+            android:id="@+id/action_myMarketFragment_to_productDetailFragment"
+            app:destination="@id/productDetailFragment" />
     </fragment>
     <fragment
         android:id="@+id/productDetailFragment"
@@ -103,6 +106,12 @@
         <action
             android:id="@+id/action_productDetailFragment_to_timelineFragment"
             app:destination="@id/timelineFragment" />
+        <argument
+            android:name="productResponse"
+            app:argType="com.example.bazaar.api.model.ProductResponse" />
+        <action
+            android:id="@+id/action_productDetailFragment_to_myMarketFragment"
+            app:destination="@id/myMarketFragment" />
     </fragment>
     <fragment
         android:id="@+id/settingsFragment"
@@ -115,6 +124,9 @@
         <action
             android:id="@+id/action_settingsFragment_to_myMarketFragment"
             app:destination="@id/myMarketFragment" />
+        <argument
+            android:name="username"
+            app:argType="string" />
     </fragment>
     <fragment
         android:id="@+id/createYourFareFragment"

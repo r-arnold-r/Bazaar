@@ -73,6 +73,17 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/profile_name_tv" />
 
+
+    <ImageView
+        android:id="@+id/edit_iv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_edit"
+        android:clickable="true"
+        app:layout_constraintBottom_toTopOf="@+id/inactive_tv"
+        app:layout_constraintEnd_toEndOf="@+id/date_tv"
+        app:layout_constraintTop_toBottomOf="@+id/date_tv" />
+
     <TextView
         android:id="@+id/product_name_tv"
         android:layout_width="wrap_content"
@@ -94,6 +105,26 @@
         app:layout_constraintStart_toStartOf="@+id/product_image_civ"
         app:layout_constraintTop_toBottomOf="@+id/product_name_tv" />
 
+    <TextView
+        android:id="@+id/available_amount_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Available amount: 2L"
+        android:textColor="@color/black"
+        android:textSize="16sp"
+        app:layout_constraintStart_toStartOf="@+id/product_price_per_quantity_tv"
+        app:layout_constraintTop_toBottomOf="@+id/product_price_per_quantity_tv" />
+
+    <TextView
+        android:id="@+id/rate_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="6dp"
+        android:text="Rate this fare, click on the stars above  "
+        android:textColor="@color/B_black_op50"
+        android:textSize="16sp"
+        app:layout_constraintStart_toStartOf="@+id/available_amount_tv"
+        app:layout_constraintTop_toBottomOf="@+id/available_amount_tv" />
 
     <ImageView
         android:id="@+id/inactive_im"
@@ -123,16 +154,16 @@
         android:layout_height="100dp"
         android:layout_marginStart="16dp"
         android:layout_marginLeft="16dp"
-        android:layout_marginTop="6dp"
+        android:layout_marginTop="8dp"
         android:layout_marginEnd="16dp"
         android:layout_marginRight="16dp"
         android:scrollbars="vertical"
         android:text="Palinka din prune alese, facuta cu drag dupa o reteta de familie. S-au folosit cele mai bune si frumoase prune, culese din livezi din Transilvania"
         android:textColor="@color/black"
-        android:textSize="12dp"
+        android:textSize="14sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/product_price_per_quantity_tv" />
+        app:layout_constraintTop_toBottomOf="@+id/rate_tv" />
 
     <TextView
         android:id="@+id/total_quantity_et"
@@ -154,8 +185,8 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:text="Total items"
-        android:textSize="12dp"
         android:textColor="@color/black"
+        android:textSize="12dp"
         app:layout_constraintEnd_toEndOf="@+id/total_quantity_et"
         app:layout_constraintStart_toStartOf="@+id/total_quantity_et"
         app:layout_constraintTop_toBottomOf="@+id/total_quantity_et" />
@@ -180,8 +211,8 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:text="Price/item"
-        android:textSize="12dp"
         android:textColor="@color/black"
+        android:textSize="12dp"
         app:layout_constraintEnd_toEndOf="@+id/price_et"
         app:layout_constraintStart_toStartOf="@+id/price_et"
         app:layout_constraintTop_toBottomOf="@+id/price_et" />
@@ -205,8 +236,8 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:text="Selled items"
-        android:textSize="12dp"
         android:textColor="@color/black"
+        android:textSize="12dp"
         app:layout_constraintEnd_toEndOf="@+id/sold_quantity_et"
         app:layout_constraintStart_toStartOf="@+id/sold_quantity_et"
         app:layout_constraintTop_toBottomOf="@+id/sold_quantity_et" />
@@ -231,10 +262,50 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:text="Reveneu"
-        android:textSize="12dp"
         android:textColor="@color/black"
+        android:textSize="12dp"
         app:layout_constraintEnd_toEndOf="@+id/revenue_et"
         app:layout_constraintStart_toStartOf="@+id/revenue_et"
         app:layout_constraintTop_toBottomOf="@+id/revenue_et" />
+
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/mail_civ"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="86dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:src="@drawable/ic_mail_details"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/cart_civ"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/phone_civ"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="86dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:src="@drawable/ic_phone_details"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/cart_civ" />
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/cart_civ"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="86dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:src="@drawable/ic_cart_details"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/phone_civ"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/mail_civ" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

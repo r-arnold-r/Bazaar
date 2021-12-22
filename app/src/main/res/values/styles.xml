@@ -99,6 +99,14 @@
         <item name="colorControlActivated">@color/light_blue</item>
     </style>
 
+    <style name="SearchViewStyle" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:editTextColor">@color/white</item>
+        <!--This line changes the color of text in Toolbar-->
+        <item name="android:textColorPrimary">@color/white</item>
+        <!--This line changes the color of icons in toolbar (back, overflow menu icons)-->
+        <item name="android:textColorSecondary">@color/white</item>
+    </style>
+
     <style name="EditTextCreateFare">
         <item name="colorControlActivated">@color/B_black</item>
     </style>

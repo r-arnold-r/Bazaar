@@ -8,5 +8,4 @@ import com.example.bazaar.api.model.User
 class MainActivityViewModel : ViewModel()
 {
     var products: ProductsListResponse? = null
-
 }

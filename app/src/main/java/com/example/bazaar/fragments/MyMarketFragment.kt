@@ -41,6 +41,7 @@ class MyMarketFragment : Fragment(), ProductAdapter.ItemClickListener{
     private lateinit var refreshTokenViewModel: RefreshTokenViewModel
     private lateinit var productsViewModel: ProductsViewModel
     private lateinit var productAdapter: ProductAdapter
+    private var recyclerViewDecorated = false
 
     companion object
     {
@@ -91,8 +92,10 @@ class MyMarketFragment : Fragment(), ProductAdapter.ItemClickListener{
             when (it.itemId) {
                 R.id.nav_settings -> {
                     // Save profile changes
-                    Toast.makeText(requireContext(), "Click Settings Icon.", Toast.LENGTH_SHORT).show()
-                    findNavController().navigate(R.id.action_myMarketFragment_to_settingsFragment)
+                    val bundle = Bundle()
+                    bundle.putString("username",  MyApplication.sharedPreferences.getUserValue(
+                            SharedPreferencesManager.KEY_USER, User()).username)
+                    findNavController().navigate(R.id.action_myMarketFragment_to_settingsFragment, bundle)
                     true
                 }
                 R.id.nav_search -> {
@@ -120,13 +123,15 @@ class MyMarketFragment : Fragment(), ProductAdapter.ItemClickListener{
         recyclerView.itemAnimator = DefaultItemAnimator()
         recyclerView.adapter = productAdapter
 
-        recyclerView.addItemDecoration(
+        if(!recyclerViewDecorated) {
+            recyclerView.addItemDecoration(
                 MarginItemDecoration(
-                        resources.getDimensionPixelSize(R.dimen.dimen_margin_horizontal_in_dp),
-                        resources.getDimensionPixelSize(R.dimen.dimen_margin_vertical_in_dp)
+                    resources.getDimensionPixelSize(R.dimen.dimen_margin_horizontal_in_dp),
+                    resources.getDimensionPixelSize(R.dimen.dimen_margin_vertical_in_dp)
                 )
-        )
-
+            )
+            recyclerViewDecorated = true
+        }
         productAdapter.notifyDataSetChanged()
     }
 
@@ -202,7 +207,10 @@ class MyMarketFragment : Fragment(), ProductAdapter.ItemClickListener{
     }
 
     override fun onItemClick(position: Int) {
-        Log.d("xxx", "onItemClick: $position")
+        val bundle = Bundle()
+        bundle.putParcelable("productResponse", productAdapter.getItemData(position))
+        findNavController().navigate(R.id.action_myMarketFragment_to_productDetailFragment, bundle)
     }
+
 
 }

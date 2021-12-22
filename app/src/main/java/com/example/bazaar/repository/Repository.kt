@@ -29,6 +29,26 @@ class Repository {
     }
 
     suspend fun addProduct(token: String, request: AddProductRequest) : AddProductResponse {
-        return RetrofitInstance.api.addProduct(token, request.title, request.description, request.price_per_unit.toString(), request.units, request.is_active, request.rating.toDouble(), request.amount_type, request.price_type )
+        return RetrofitInstance.api.addProduct(
+                token,
+                request.title,
+                request.description,
+                request.price_per_unit.toString(),
+                request.units, request.is_active,
+                request.rating.toDouble(),
+                request.amount_type,
+                request.price_type )
+    }
+
+    suspend fun getUserInfo(username: String): GetUserInfoListResponse {
+        return RetrofitInstance.api.getUserInfo(username)
+    }
+
+    suspend fun updateUserData(token: String, request: UpdateUserDataRequest): UpdateUserDataListResponse {
+        return RetrofitInstance.api.updateUserData(token, request.username, request.phone_number)
+    }
+
+    suspend fun removeProduct(token: String, product_id: String): RemoveProductResponse {
+        return RetrofitInstance.api.removeProduct(token, product_id)
     }
 }

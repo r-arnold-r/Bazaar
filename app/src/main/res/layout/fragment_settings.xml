@@ -54,7 +54,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"
-                android:text="Cameron Williamson"
                 android:textColor="@color/B_white"
                 android:textSize="24sp"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -151,39 +150,9 @@
                     android:textColorHint="@color/white"/>
             </com.google.android.material.textfield.TextInputLayout>
 
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/password_til"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="56dp"
-                android:layout_marginLeft="56dp"
-                android:layout_marginTop="35dp"
-                android:layout_marginEnd="56dp"
-                android:layout_marginRight="56dp"
-                android:hint="Password"
-                style="@style/LoginTextInputLayout"
-                app:boxStrokeColor="@color/selector_edit_text_border_login"
-                app:endIconDrawable="@drawable/ic_eye"
-                app:endIconMode="custom"
-                app:endIconTint="@color/selector_icon_input_layout_color"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/phone_til">
-
-                <EditText
-                    android:id="@+id/password_et"
-                    android:layout_width="match_parent"
-                    android:layout_height="56dp"
-                    android:singleLine="true"
-                    android:textSize="14sp"
-                    android:theme="@style/EditTextCreateLogin"
-                    android:textColor="@color/white"
-                    android:textColorHint="@color/white"/>
-            </com.google.android.material.textfield.TextInputLayout>
-
 
             <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/login_btn"
+                android:id="@+id/publish_btn"
                 android:layout_width="match_parent"
                 android:layout_height="32dp"
                 android:layout_marginStart="56dp"
@@ -199,7 +168,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/password_til" />
+                app:layout_constraintTop_toBottomOf="@+id/phone_til" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

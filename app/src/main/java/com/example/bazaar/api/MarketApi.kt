@@ -33,5 +33,18 @@ interface MarketApi {
                            @Part("is_active") is_active: Boolean,
                            @Part("rating") rating: Double,
                            @Part("amount_type") amount_type: String,
-                           @Part("price_type") price_type: String,): AddProductResponse
+                           @Part("price_type") price_type: String): AddProductResponse
+
+    @GET(Constants.GET_USER_INFO_URL)
+    suspend fun getUserInfo(@Header(Constants.HEADER_USERNAME) username: String): GetUserInfoListResponse
+
+    @Multipart
+    @POST(Constants.UPDATE_USER_DATA)
+    suspend fun updateUserData(@Header(Constants.HEADER_TOKEN) token: String,
+                               @Part("username") username: String,
+                               @Part("phone_number") phone_number: Long,
+                               ): UpdateUserDataListResponse
+
+    @POST(Constants.REMOVE_PRODUCT)
+    suspend fun removeProduct(@Header(Constants.HEADER_TOKEN) token: String, @Query(Constants.QUERY_PRODUCT_ID) product_id: String): RemoveProductResponse
 }

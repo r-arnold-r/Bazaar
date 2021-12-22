@@ -2,6 +2,7 @@ package com.example.bazaar.viewmodels
 
 import android.content.Context
 import android.util.Log
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.bazaar.MyApplication
 import com.example.bazaar.SingleLiveEvent
@@ -14,7 +15,7 @@ import com.example.bazaar.repository.Repository
 import retrofit2.HttpException
 
 class AddProductViewModel (val context: Context, private val repository: Repository) : ViewModel() {
-    var error: SingleLiveEvent<String> = SingleLiveEvent()
+    var error: MutableLiveData<String> = MutableLiveData()
     var product = SingleLiveEvent<AddProductRequest>()
     var response = SingleLiveEvent<AddProductResponse>()
 
@@ -48,6 +49,10 @@ class AddProductViewModel (val context: Context, private val repository: Reposit
                 is HttpException -> {
                     if(e.code() == 302) {
                         Log.d("AddProductViewModel", "Token expired: ${e.toString()}")
+                    }
+                    else{
+                        Log.d("AddProductViewModel", "AddProductViewModel - exception: ${e.toString()}")
+                        error.value = e.message.toString()
                     }
                 }
                 else -> {

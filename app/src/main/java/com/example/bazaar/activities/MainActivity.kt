@@ -3,6 +3,7 @@ package com.example.bazaar.activities
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.NavigationUI
 import com.example.bazaar.MyApplication
@@ -16,6 +17,7 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
     private lateinit var viewModel: MainActivityViewModel
+    private lateinit var navController: NavController
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,7 +37,7 @@ class MainActivity : AppCompatActivity() {
         val navHostFragment =
                 supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         // find NavController
-        val navController = navHostFragment.navController
+        navController = navHostFragment.navController
         // setup NavigationUI with NavController
         NavigationUI.setupWithNavController(binding.bottomNavigation, navController)
         // get NavGraph
@@ -62,11 +64,21 @@ class MainActivity : AppCompatActivity() {
         return binding
     }
 
-    /** ??? **/
     override fun onSupportNavigateUp(): Boolean {
         val navHostFragment =
                 supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         val navController = navHostFragment.navController
         return navController.navigateUp() || super.onSupportNavigateUp()
+    }
+
+    override fun onBackPressed() {
+        if (navController.currentDestination?.id == R.id.loginFragment) {
+            finish()
+        } else if (navController.currentDestination?.id == R.id.timelineFragment) {
+            finish()
+            // do nothing
+        } else {
+            super.onBackPressed()
+        }
     }
 }

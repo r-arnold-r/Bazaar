@@ -72,21 +72,17 @@ data class GetUserInfoListResponse(
 
 @JsonClass(generateAdapter = true)
 data class UpdateUserDataResponse(
-        val _id: String,
         val username: String,
-        val password: String,
         val phone_number: Long,
         val email: String,
         val is_activated: Boolean,
-        val image_url: String,
-        val image_id: String,
         val creation_time: Long,
-        val __v: Int
+        val token: String,
 )
 
 @JsonClass(generateAdapter = true)
 data class UpdateUserDataListResponse(
         val code: Int,
         val updatedData: UpdateUserDataResponse,
-        val timestamp: Int
+        val timestamp: Long
 )

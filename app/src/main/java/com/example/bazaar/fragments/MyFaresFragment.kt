@@ -1,9 +1,12 @@
 package com.example.bazaar.fragments
 
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -77,6 +80,7 @@ class MyFaresFragment : Fragment(), OrderAdapter.ItemClickListener {
         getOngoingSales()
         ordersViewModelErrorObservable()
         ordersViewModelFilterObservable()
+        searchViewHandler()
         handleToggleButtons()
 
         return view
@@ -235,6 +239,27 @@ class MyFaresFragment : Fragment(), OrderAdapter.ItemClickListener {
         updateOrderViewModel.updateOrderResponse.observe(viewLifecycleOwner) {
 
         }
+    }
+
+    /**controls search view**/
+    private fun searchViewHandler() {
+        binding.searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+
+            override fun onQueryTextChange(newText: String): Boolean {
+                // filters text
+                if (::orderAdapter.isInitialized) {
+                    orderAdapter.filter.filter(newText)
+                }
+
+                return false
+            }
+
+            override fun onQueryTextSubmit(query: String): Boolean {
+                // task HERE
+                return false
+            }
+
+        })
     }
 
     override fun onDestroyView() {

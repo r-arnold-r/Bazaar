@@ -4,6 +4,7 @@ import android.app.Dialog
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -72,6 +73,8 @@ class TimelineFragment : Fragment(), ProductAdapter.ItemClickListener {
         // Inflate the layout for this fragment
         _binding = FragmentTimelineBinding.inflate(inflater, container, false)
         val view = binding.root
+
+        Log.d("TimelineFragment", MyApplication.sharedPreferences.getStringValue(SharedPreferencesManager.KEY_TOKEN, "Empty token!").toString())
 
         getProducts()
 
@@ -362,5 +365,7 @@ class TimelineFragment : Fragment(), ProductAdapter.ItemClickListener {
         bundle.putParcelable("productResponse", productAdapter.getItemData(position))
         findNavController().navigate(R.id.action_timelineFragment_to_productDetailFragment, bundle)
     }
+
+
 
 }

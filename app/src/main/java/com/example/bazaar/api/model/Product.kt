@@ -100,6 +100,6 @@ data class Updated_product_item (
         val description : String,
         val title : String,
         val images : List<String>,
-        val creation_time : Int,
+        val creation_time : Long,
         val messages : List<String>
 )

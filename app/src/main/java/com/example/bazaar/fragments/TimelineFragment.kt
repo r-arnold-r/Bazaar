@@ -75,14 +75,7 @@ class TimelineFragment : Fragment() , ProductAdapter.ItemClickListener{
         _binding = FragmentTimelineBinding.inflate(inflater, container, false)
         val view = binding.root
 
-        val viewModel: MainActivityViewModel by activityViewModels()
-
-        //if(viewModel.products == null){
-            getProducts()
-        //}
-        //else{
-        //    productsViewModel.products.value = viewModel.products
-        //}
+        getProducts()
 
         getProductsViewModelErrorObservable()
         getProductsViewModelProductsObservable(view)
@@ -258,7 +251,7 @@ class TimelineFragment : Fragment() , ProductAdapter.ItemClickListener{
                 }
                 R.id.nav_settings -> {
                     val bundle = Bundle()
-                    bundle.putString("username",  MyApplication.sharedPreferences.getUserValue(
+                    bundle.putString("username", MyApplication.sharedPreferences.getUserValue(
                             SharedPreferencesManager.KEY_USER, User()).username)
                     findNavController().navigate(R.id.action_timelineFragment_to_settingsFragment, bundle)
                     true
@@ -275,6 +268,7 @@ class TimelineFragment : Fragment() , ProductAdapter.ItemClickListener{
         dialog.setCancelable(false)
         dialog.setContentView(R.layout.dialog_timeline_filter)
         dialog.window!!.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN)
+
         val titleEt: EditText = dialog.findViewById(R.id.title_et)
         val priceEt: EditText = dialog.findViewById(R.id.price_et)
         val unitEt: EditText = dialog.findViewById(R.id.unit_et)

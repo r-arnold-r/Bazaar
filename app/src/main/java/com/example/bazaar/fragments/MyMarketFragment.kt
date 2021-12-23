@@ -77,7 +77,7 @@ class MyMarketFragment : Fragment(), ProductAdapter.ItemClickListener{
         binding.toolbar.setNavigationIcon(R.drawable.ic_toolbar_arrow)
         binding.toolbar.setNavigationOnClickListener {
             // back button pressed
-            findNavController().navigateUp()
+            findNavController().navigate(R.id.action_myMarketFragment_to_timelineFragment)
         }
         createYourFareFABHandler()
         getProductsViewModelProductsObservable(view)
@@ -226,6 +226,7 @@ class MyMarketFragment : Fragment(), ProductAdapter.ItemClickListener{
     override fun onDestroyView()
     {
         super.onDestroyView()
+        recyclerViewDecorated = false
         _binding = null
     }
 

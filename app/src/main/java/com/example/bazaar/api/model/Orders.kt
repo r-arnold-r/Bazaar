@@ -44,16 +44,16 @@ data class AddOrderResponse (
         val description : String,
         val title : String,
         val images : List<Images>,
-        val creation_time : Int
+        val creation_time : Long
 )
 
 @JsonClass(generateAdapter = true)
 data class AddOrderRequest (
-        val title : String,
-        val description: String,
-        val price_per_unit : Int,
-        val units: Int,
-        val owner_username: String,
+        var title : String,
+        var description: String,
+        var price_per_unit : Int,
+        var units: Int,
+        var owner_username: String,
         val revolut_link: String
 )
 
@@ -86,7 +86,7 @@ data class Updated_order_item (
         val description : String,
         val title : String,
         val images : List<String>,
-        val creation_time : Int,
+        val creation_time : Long,
         val _v : Int,
         val status: String
 )

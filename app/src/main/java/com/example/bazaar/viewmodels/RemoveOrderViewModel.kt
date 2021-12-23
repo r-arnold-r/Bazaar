@@ -12,7 +12,7 @@ import com.example.bazaar.repository.Repository
 
 class RemoveOrderViewModel(val context: Context, private val repository: Repository) : ViewModel() {
     var error: MutableLiveData<String> = MutableLiveData()
-    var removeOrderResponse = SingleLiveEvent<RemoveOrderResponse>()
+    var removeOrderResponse = MutableLiveData<RemoveOrderResponse>()
 
     suspend fun removeOrder(order_id: String) {
         try {

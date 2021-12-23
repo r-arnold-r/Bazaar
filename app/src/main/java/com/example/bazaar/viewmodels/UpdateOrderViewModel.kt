@@ -38,6 +38,9 @@ class UpdateOrderViewModel(val context: Context, private val repository: Reposit
 
             updateOrderResponse.value = repository.updateOrder(token!!, order_id, request)
 
+            Log.d("UpdateOrderViewModel", updateOrderResponse.value.toString())
+
+
         } catch (e: Exception) {
 
             Log.d("UpdateOrderViewModel", "exception: $e")

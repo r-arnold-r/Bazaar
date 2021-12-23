@@ -31,6 +31,7 @@ class GetOrderViewModel(val context: Context, private val repository: Repository
         try {
             getOrderListResponse.value = repository.getOrders(token.toString(), filter.value.toString(), sort.value.toString())
             removeSpecialCharacters()
+            Log.d("GetOrderViewModel", getOrderListResponse.value.toString())
 
         } catch (e: Exception) {
 
@@ -41,6 +42,7 @@ class GetOrderViewModel(val context: Context, private val repository: Repository
     }
 
     private fun removeSpecialCharacters() {
+
         for (i in getOrderListResponse.value!!.orders.indices) {
             getOrderListResponse.value!!.orders[i].title = getOrderListResponse.value!!.orders[i].title.replace("\"", "")
             getOrderListResponse.value!!.orders[i].description = getOrderListResponse.value!!.orders[i].description.replace("\"", "")

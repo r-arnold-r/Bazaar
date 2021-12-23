@@ -3,6 +3,7 @@ package com.example.bazaar.fragments
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -24,10 +25,7 @@ import com.example.bazaar.databinding.FragmentMyFaresBinding
 import com.example.bazaar.manager.SharedPreferencesManager
 import com.example.bazaar.repository.Repository
 import com.example.bazaar.utils.ApiString
-import com.example.bazaar.viewmodels.GetOrderViewModel
-import com.example.bazaar.viewmodels.GetOrderViewModelFactory
-import com.example.bazaar.viewmodels.UpdateOrderViewModel
-import com.example.bazaar.viewmodels.UpdateOrderViewModelFactory
+import com.example.bazaar.viewmodels.*
 import kotlinx.coroutines.launch
 
 class MyFaresFragment : Fragment(), OrderAdapter.ItemClickListener {
@@ -40,6 +38,7 @@ class MyFaresFragment : Fragment(), OrderAdapter.ItemClickListener {
 
     private lateinit var getOrderViewModel: GetOrderViewModel
     private lateinit var updateOrderViewModel: UpdateOrderViewModel
+    private lateinit var removeOrderViewModel: RemoveOrderViewModel
 
     private var recyclerViewDecorated = false
     private lateinit var recyclerView: RecyclerView
@@ -59,6 +58,9 @@ class MyFaresFragment : Fragment(), OrderAdapter.ItemClickListener {
 
         val updateOrderViewModelFactory = UpdateOrderViewModelFactory(this.requireContext(), Repository())
         updateOrderViewModel = ViewModelProvider(this, updateOrderViewModelFactory)[UpdateOrderViewModel::class.java]
+
+        val removeOrderViewModelFactory = RemoveOrderViewModelFactory(this.requireContext(), Repository())
+        removeOrderViewModel = ViewModelProvider(this, removeOrderViewModelFactory)[RemoveOrderViewModel::class.java]
     }
 
     override fun onCreateView(
@@ -72,9 +74,10 @@ class MyFaresFragment : Fragment(), OrderAdapter.ItemClickListener {
         binding.toolbar.setNavigationIcon(R.drawable.ic_toolbar_arrow)
         binding.toolbar.setNavigationOnClickListener {
             // back button pressed
-            findNavController().navigateUp()
+            findNavController().navigate(R.id.action_myFaresFragment_to_timelineFragment)
         }
 
+        ordersViewModelRemoveObservable()
         updateOrderSuccessful()
         getOrdersViewModelProductsObservable(view)
         getOngoingSales()
@@ -99,7 +102,9 @@ class MyFaresFragment : Fragment(), OrderAdapter.ItemClickListener {
                     binding.ongoingOrdersTbtn.isChecked = false
                     binding.ongoingSalesTbtn.isClickable = false
                     binding.ongoingOrdersTbtn.isClickable = true
-                    recyclerView.adapter = null
+                    if (::orderAdapter.isInitialized) {
+                        recyclerView.adapter = null
+                    }
                     getOngoingSales()
                 }
             }
@@ -112,7 +117,9 @@ class MyFaresFragment : Fragment(), OrderAdapter.ItemClickListener {
                     binding.ongoingSalesTbtn.isChecked = false
                     binding.ongoingOrdersTbtn.isClickable = false
                     binding.ongoingSalesTbtn.isClickable = true
-                    recyclerView.adapter = null
+                    if (::orderAdapter.isInitialized) {
+                        recyclerView.adapter = null
+                    }
                     getOngoingOrders()
                 }
             }
@@ -146,6 +153,8 @@ class MyFaresFragment : Fragment(), OrderAdapter.ItemClickListener {
                 .map(mapOfFilter)
                 .build()
 
+        Log.d("MyFaresFragment", "getOngoingSales: " + filter.getString())
+
         getOrderViewModel.filter.value = filter.getString()
     }
 
@@ -177,13 +186,20 @@ class MyFaresFragment : Fragment(), OrderAdapter.ItemClickListener {
         }
     }
 
+    /**called when order got deleted**/
+    private fun ordersViewModelRemoveObservable() {
+        removeOrderViewModel.removeOrderResponse.observe(viewLifecycleOwner) {
+            orderAdapter.notifyDataSetChanged()
+        }
+    }
+
     /**initializes recycleView and adapter**/
     private fun recycleViewAndAdapterHandler(view: View, orders: MutableList<Orders>) {
         //creating and setting up adapter with recyclerView
         recyclerView = binding.recyclerViewProducts
 
         //creating and setting up adapter with recyclerView
-        orderAdapter = OrderAdapter(view, this, orders, updateOrderViewModel, this) //setting the data and listener for adapter
+        orderAdapter = OrderAdapter(view, this, orders, updateOrderViewModel,removeOrderViewModel, this, requireActivity()) //setting the data and listener for adapter
 
         val layoutManager: RecyclerView.LayoutManager =
                 LinearLayoutManager(activity, RecyclerView.VERTICAL, false)

@@ -20,7 +20,7 @@ class Repository {
     suspend fun getProducts(token: String
                             ,filter: String = ""//"{\"username\":\"Sutyii\"}"
                             ,sort: String = ""//"{\"title\" : 1 }"
-                            ,limit: Int = 1000, ): ProductsListResponse {
+                            ,limit: Int = 1000): ProductsListResponse {
         return RetrofitInstance.api.getProducts(token,filter, sort, limit)
     }
 
@@ -56,8 +56,11 @@ class Repository {
         return RetrofitInstance.api.updateProduct(token, product_id, request)
     }
 
-    suspend fun getOrders(token: String): GetOrdersListResponse {
-        return RetrofitInstance.api.getOrders(token)
+    suspend fun getOrders(token: String
+                          ,filter: String = ""//"{\"username\":\"Sutyii\"}"
+                          ,sort: String = ""//"{\"title\" : 1 }"
+                          ,limit: Int = 1000,): GetOrdersListResponse {
+        return RetrofitInstance.api.getOrders(token, filter, sort, limit)
     }
 
     suspend fun addOrder(token: String, request: AddOrderRequest) : AddOrderResponse {

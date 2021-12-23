@@ -54,7 +54,10 @@ interface MarketApi {
                               @Body request: UpdateProductRequest): UpdateProductRespone
 
     @GET(Constants.GET_ORDERS_URL)
-    suspend fun getOrders(@Header(Constants.HEADER_TOKEN) token: String): GetOrdersListResponse
+    suspend fun getOrders(@Header(Constants.HEADER_TOKEN) token: String,
+                          @Header(Constants.HEADER_FILTER) filter: String,
+                          @Header(Constants.HEADER_SORT) sort: String,
+                          @Header(Constants.HEADER_LIMIT) limit: Int): GetOrdersListResponse
 
     @Multipart
     @POST(Constants.ADD_ORDER_URL)

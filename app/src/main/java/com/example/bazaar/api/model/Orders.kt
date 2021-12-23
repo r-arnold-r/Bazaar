@@ -4,17 +4,17 @@ import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
 data class Orders (
-        val order_id : String,
-        val username : String,
-        val status : String,
-        val owner_username : String,
-        val price_per_unit : Int,
-        val units : Int,
-        val description : String,
-        val title : String,
+        var order_id : String,
+        var username : String,
+        var status : String,
+        var owner_username : String,
+        var price_per_unit : String,
+        var units : String,
+        var description : String,
+        var title : String,
         val images : List<String>,
         val creation_time : Long,
-        val messages : List<String>
+        val messages : List<Object>
 )
 
 @JsonClass(generateAdapter = true)

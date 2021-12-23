@@ -40,10 +40,11 @@ interface MarketApi {
 
     @Multipart
     @POST(Constants.UPDATE_USER_DATA_URL)
-    suspend fun updateUserData(@Header(Constants.HEADER_TOKEN) token: String,
-                               @Part("username") username: String,
-                               @Part("phone_number") phone_number: Long,
-                               ): UpdateUserDataListResponse
+    suspend fun updateUserData(
+            @Header(Constants.HEADER_TOKEN) token: String,
+            @Part("username") username: String,
+            @Part("phone_number") phone_number: Long,
+    ): UpdateUserDataListResponse
 
     @POST(Constants.REMOVE_PRODUCT_URL)
     suspend fun removeProduct(@Header(Constants.HEADER_TOKEN) token: String, @Query(Constants.QUERY_PRODUCT_ID) product_id: String): RemoveProductResponse
@@ -73,6 +74,6 @@ interface MarketApi {
 
     @POST(Constants.UPDATE_ORDER_URL)
     suspend fun updateOrder(@Header(Constants.HEADER_TOKEN) token: String,
-                              @Query(Constants.QUERY_ORDER_ID) order_id: String,
-                              @Body request: UpdateOrderRequest): UpdateOrderResponse
+                            @Query(Constants.QUERY_ORDER_ID) order_id: String,
+                            @Body request: UpdateOrderRequest): UpdateOrderResponse
 }

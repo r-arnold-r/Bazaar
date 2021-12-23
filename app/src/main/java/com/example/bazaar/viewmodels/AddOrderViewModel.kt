@@ -6,18 +6,18 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.bazaar.MyApplication
 import com.example.bazaar.SingleLiveEvent
-import com.example.bazaar.api.model.*
+import com.example.bazaar.api.model.AddOrderRequest
+import com.example.bazaar.api.model.AddOrderResponse
 import com.example.bazaar.manager.SharedPreferencesManager
 import com.example.bazaar.repository.Repository
-import retrofit2.HttpException
 
-class AddOrderViewModel (val context: Context, private val repository: Repository) : ViewModel() {
+class AddOrderViewModel(val context: Context, private val repository: Repository) : ViewModel() {
     var error: MutableLiveData<String> = MutableLiveData()
     var order = SingleLiveEvent<AddOrderRequest>()
     var response = SingleLiveEvent<AddOrderResponse>()
 
     init {
-        order.value = AddOrderRequest("","",0,0, "", "")
+        order.value = AddOrderRequest("", "", 0, 0, "", "")
     }
 
     suspend fun addOrder() {
@@ -27,7 +27,7 @@ class AddOrderViewModel (val context: Context, private val repository: Repositor
                         description = order.value!!.description,
                         price_per_unit = order.value!!.price_per_unit,
                         units = order.value!!.units,
-                        owner_username =  order.value!!.owner_username,
+                        owner_username = order.value!!.owner_username,
                         revolut_link = "")
         try {
 
@@ -39,8 +39,8 @@ class AddOrderViewModel (val context: Context, private val repository: Repositor
             response.value = repository.addOrder(token!!, request)
 
         } catch (e: Exception) {
-                Log.d("AddOrderViewModel", "exception: $e")
-                error.value = e.message.toString()
+            Log.d("AddOrderViewModel", "exception: $e")
+            error.value = e.message.toString()
         }
 
     }

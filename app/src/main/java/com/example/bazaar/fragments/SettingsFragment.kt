@@ -1,43 +1,40 @@
 package com.example.bazaar.fragments
 
 import android.os.Bundle
-import android.text.method.ScrollingMovementMethod
-import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.bazaar.MyApplication
 import com.example.bazaar.R
-import com.example.bazaar.api.model.UpdateUserDataRequest
 import com.example.bazaar.api.model.User
-import com.example.bazaar.databinding.FragmentProductDetailBinding
 import com.example.bazaar.databinding.FragmentSettingsBinding
 import com.example.bazaar.manager.SharedPreferencesManager
 import com.example.bazaar.repository.Repository
-import com.example.bazaar.viewmodels.*
+import com.example.bazaar.viewmodels.GetUserInfoViewModel
+import com.example.bazaar.viewmodels.GetUserInfoViewModelFactory
+import com.example.bazaar.viewmodels.UpdateUserDataViewModel
+import com.example.bazaar.viewmodels.UpdateUserDataViewModelFactory
 import kotlinx.coroutines.launch
 
 class SettingsFragment : Fragment() {
 
     private var _binding: FragmentSettingsBinding? = null
+
     // This property is only valid between onCreateView and
     // onDestroyView.
     private val binding get() = _binding!!
 
-    private lateinit var getUserInfoViewModel : GetUserInfoViewModel
-    private lateinit var updateUserDataViewModel : UpdateUserDataViewModel
+    private lateinit var getUserInfoViewModel: GetUserInfoViewModel
+    private lateinit var updateUserDataViewModel: UpdateUserDataViewModel
 
 
-
-    companion object
-    {
-        fun newInstance(): SettingsFragment
-        {
+    companion object {
+        fun newInstance(): SettingsFragment {
             return SettingsFragment()
         }
     }
@@ -58,28 +55,12 @@ class SettingsFragment : Fragment() {
         _binding = FragmentSettingsBinding.inflate(inflater, container, false)
         val view = binding.root
 
-        val username = arguments?.getString("username")
+        val username = arguments!!.getString("username")!!
 
         resetErrorMessageOnTextInputLayouts()
-        if(username == MyApplication.sharedPreferences.getUserValue(SharedPreferencesManager.KEY_USER, User()).username)
-        {
-            binding.emailEt.keyListener = null
-            binding.publishBtn.setOnClickListener{
-                tryToPublish()
-            }
-        }
-        else
-        {
-            binding.emailEt.keyListener = null
-            binding.usernameEt.keyListener = null
-            binding.phoneEt.keyListener = null
-            binding.publishBtn.text = "Send a chat message"
-        }
 
-
-        if (username != null) {
-            tryToGetUserInfo(username)
-        }
+        viewSelection(username)
+        tryToGetUserInfo(username)
         tryToGetUserInfoSuccessful()
         updateUserDataSuccessful()
 
@@ -94,21 +75,46 @@ class SettingsFragment : Fragment() {
         return view
     }
 
-    private fun resetErrorMessageOnTextInputLayouts()
-    {
-        binding.usernameEt.setOnClickListener{
+    /** Selects owner or user view depending on the username in shared preferences **/
+    private fun viewSelection(username: String) {
+        if (username == MyApplication.sharedPreferences.getUserValue(SharedPreferencesManager.KEY_USER, User()).username) {
+            handleOwnerView()
+        } else {
+            handleUserView()
+        }
+    }
+
+    /** handles user view **/
+    private fun handleUserView() {
+        binding.emailEt.keyListener = null
+        binding.usernameEt.keyListener = null
+        binding.phoneEt.keyListener = null
+        binding.publishBtn.text = "Send a chat message"
+    }
+
+    /** handles owner view **/
+    private fun handleOwnerView() {
+        binding.emailEt.keyListener = null
+        binding.publishBtn.setOnClickListener {
+            tryToPublish()
+        }
+    }
+
+    /**resets error messages on text input layouts **/
+    private fun resetErrorMessageOnTextInputLayouts() {
+        binding.usernameEt.setOnClickListener {
             binding.usernameTil.error = null
             binding.usernameTil.isErrorEnabled = false
         }
-        binding.phoneTil.setOnClickListener{
+        binding.phoneTil.setOnClickListener {
             binding.phoneTil.error = null
             binding.phoneTil.isErrorEnabled = false
         }
     }
 
-    private fun tryToPublish()
-    {
-        // make register button not clickable
+    /** tries to publish changes to user data**/
+    private fun tryToPublish() {
+        // make publish button not clickable
         binding.publishBtn.isClickable = false
 
         // resets error message on text input layouts
@@ -119,21 +125,21 @@ class SettingsFragment : Fragment() {
 
 
         // analyzes wrong inputs
-        if(binding.usernameEt.text.trim().isEmpty()){
+        if (binding.usernameEt.text.trim().isEmpty()) {
             binding.usernameTil.error = "Please input your username!"
-            // make login button clickable
+            // make publish button clickable
             binding.publishBtn.isClickable = true
             return
         }
-        if(binding.usernameEt.text.trim().length < 3){
+        if (binding.usernameEt.text.trim().length < 3) {
             binding.usernameTil.error = "Your username must contain at least 3 characters!"
-            // make login button clickable
+            // make publish button clickable
             binding.publishBtn.isClickable = true
             return
         }
-        if(binding.phoneEt.text.trim().isEmpty()){
+        if (binding.phoneEt.text.trim().isEmpty()) {
             binding.phoneTil.error = "Please input your phone number!"
-            // make login button clickable
+            // make publish button clickable
             binding.publishBtn.isClickable = true
             return
         }
@@ -147,30 +153,31 @@ class SettingsFragment : Fragment() {
             }
         }
 
-        // attempt to log in inside lifecycleScope
+        // attempt to update user data in inside lifecycleScope
         lifecycleScope.launch {
             updateUserDataViewModel.updateUserData()
         }
 
     }
 
-    /** Navigates to LoginFragment on successful register **/
-    private fun updateUserDataSuccessful(){
-        updateUserDataViewModel.updateUserDataRequest.observe(viewLifecycleOwner){
-            // make login button clickable
+    /** called when user data was updated successfully **/
+    private fun updateUserDataSuccessful() {
+        updateUserDataViewModel.updateUserDataRequest.observe(viewLifecycleOwner) {
+            // make publish button clickable
             binding.publishBtn.isClickable = true
         }
     }
 
-    private fun tryToGetUserInfo(username: String)
-    {
+    /** tries to get user information **/
+    private fun tryToGetUserInfo(username: String) {
         lifecycleScope.launch {
             getUserInfoViewModel.getUserInfo(username)
         }
     }
 
-    private fun tryToGetUserInfoSuccessful(){
-        getUserInfoViewModel.userResponse.observe(viewLifecycleOwner){
+    /** called when user info was obtained successfully**/
+    private fun tryToGetUserInfoSuccessful() {
+        getUserInfoViewModel.userResponse.observe(viewLifecycleOwner) {
             binding.emailEt.setText(getUserInfoViewModel.userResponse.value?.data?.get(0)?.email.toString())
             binding.phoneEt.setText(getUserInfoViewModel.userResponse.value?.data?.get(0)?.phone_number.toString())
             binding.usernameEt.setText(getUserInfoViewModel.userResponse.value?.data?.get(0)?.username.toString())
@@ -195,8 +202,7 @@ class SettingsFragment : Fragment() {
 
     }
 
-    override fun onDestroyView()
-    {
+    override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
     }

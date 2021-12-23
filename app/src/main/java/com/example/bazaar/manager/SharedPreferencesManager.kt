@@ -24,12 +24,12 @@ class SharedPreferencesManager(context: Context) {
     }
 
     fun putUserValue(key: String, value: User) {
-        val jsonUser : String = Gson().toJson(value)
+        val jsonUser: String = Gson().toJson(value)
         putStringValue(key, jsonUser)
     }
 
-    fun getUserValue(key: String, defaultValue: User) : User{
-        val jsonUserDefault : String = Gson().toJson(defaultValue)
+    fun getUserValue(key: String, defaultValue: User): User {
+        val jsonUserDefault: String = Gson().toJson(defaultValue)
         val jsonUser: String? = getStringValue(key, jsonUserDefault)
         return Gson().fromJson(jsonUser, User::class.java)
     }

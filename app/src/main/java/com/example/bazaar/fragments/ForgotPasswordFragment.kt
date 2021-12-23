@@ -1,12 +1,10 @@
 package com.example.bazaar.fragments
 
 import android.os.Bundle
-import android.util.Patterns
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -14,36 +12,36 @@ import com.example.bazaar.R
 import com.example.bazaar.databinding.FragmentForgotPasswordBinding
 import com.example.bazaar.extensionfunctions.ExtensionFunctions.isValidEmail
 import com.example.bazaar.repository.Repository
-import com.example.bazaar.viewmodels.*
+import com.example.bazaar.viewmodels.ResetPasswordViewModel
+import com.example.bazaar.viewmodels.ResetPasswordViewModelFactory
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.launch
 
 class ForgotPasswordFragment : Fragment() {
 
     private var _binding: FragmentForgotPasswordBinding? = null
+
     // This property is only valid between onCreateView and
     // onDestroyView.
     private val binding get() = _binding!!
 
     private lateinit var resetPasswordViewModel: ResetPasswordViewModel
 
-    companion object
-    {
-        fun newInstance(): ForgotPasswordFragment
-        {
+    companion object {
+        fun newInstance(): ForgotPasswordFragment {
             return ForgotPasswordFragment()
         }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val factory = ResetPasswordViewModelFactory(this.requireContext(), Repository())
-        resetPasswordViewModel = ViewModelProvider(this, factory)[ResetPasswordViewModel::class.java]
+        val resetPasswordViewModelFactory = ResetPasswordViewModelFactory(this.requireContext(), Repository())
+        resetPasswordViewModel = ViewModelProvider(this, resetPasswordViewModelFactory)[ResetPasswordViewModel::class.java]
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+            inflater: LayoutInflater, container: ViewGroup?,
+            savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
         _binding = FragmentForgotPasswordBinding.inflate(inflater, container, false)
@@ -57,50 +55,51 @@ class ForgotPasswordFragment : Fragment() {
     }
 
     /** Resets error message on double click **/
-    private fun resetErrorMessageOnTextInputLayouts()
-    {
-        binding.usernameEt.setOnClickListener{
+    private fun resetErrorMessageOnTextInputLayouts() {
+        binding.usernameEt.setOnClickListener {
             binding.usernameTil.error = null
             binding.usernameTil.isErrorEnabled = false
         }
-        binding.emailEt.setOnClickListener{
+        binding.emailEt.setOnClickListener {
             binding.emailTil.error = null
             binding.emailTil.isErrorEnabled = false
         }
     }
 
-    private fun emailMeBtnHandler(){
-        binding.emailMeBtn.setOnClickListener{
-            tryToLogIn()
+    /** Handles click on email button **/
+    private fun emailMeBtnHandler() {
+        binding.emailMeBtn.setOnClickListener {
+            tryToResetPassword()
         }
     }
 
     /** Shows error message to user on unsuccessful Reset password attempt **/
-    private fun resetPasswordViewModelErrorObservable(){
-        resetPasswordViewModel.error.observe(viewLifecycleOwner){
+    private fun resetPasswordViewModelErrorObservable() {
+        resetPasswordViewModel.error.observe(viewLifecycleOwner) {
             // hide progressbar
             binding.progressbar.visibility = View.INVISIBLE
             // show error message
             Snackbar.make(requireView(), resetPasswordViewModel.error.value.toString(), Snackbar.LENGTH_LONG).show()
-            // make login button clickable
+            // make email button clickable
             binding.emailMeBtn.isClickable = true
         }
     }
 
     /** Navigates to LoginFragment on successful password reset **/
-    private fun navigateToTimelineFragmentIfForgotPasswordSuccessful(){
-        resetPasswordViewModel.success.observe(viewLifecycleOwner){
+    private fun navigateToTimelineFragmentIfForgotPasswordSuccessful() {
+        resetPasswordViewModel.success.observe(viewLifecycleOwner) {
             // hide progressbar
             binding.progressbar.visibility = View.INVISIBLE
-            // navigate to TimeLineFragment
+            // navigate to LoginFragment
             findNavController().navigate(R.id.action_forgotPasswordFragment_to_loginFragment)
-            // make login button clickable
+            // make email button clickable
             binding.emailMeBtn.isClickable = true
         }
     }
 
-    private fun tryToLogIn(){
-        // make login button not clickable
+    /** tries to reset the password**/
+    private fun tryToResetPassword() {
+        // make email button not clickable
         binding.emailMeBtn.isClickable = false
 
         // resets error message on text input layouts
@@ -110,26 +109,26 @@ class ForgotPasswordFragment : Fragment() {
         binding.emailTil.isErrorEnabled = false
 
         // analyzes wrong inputs
-        if(binding.usernameEt.text.trim().isEmpty()){
+        if (binding.usernameEt.text.trim().isEmpty()) {
             binding.usernameTil.error = "Please input your username!"
-            // make login button clickable
+            // make email button clickable
             binding.emailMeBtn.isClickable = true
             return
         }
-        if(binding.usernameEt.text.trim().length < 3){
+        if (binding.usernameEt.text.trim().length < 3) {
             binding.usernameTil.error = "Your username must contain at least 3 characters!"
-            // make login button clickable
+            // make email button clickable
             binding.emailMeBtn.isClickable = true
             return
         }
-        if(!binding.emailEt.text.isValidEmail()){
+        if (!binding.emailEt.text.isValidEmail()) {
             binding.emailTil.error = "Please input your email!"
-            // make login button clickable
+            // make email button clickable
             binding.emailMeBtn.isClickable = true
             return
         }
 
-        // initializes user in login view model
+        // initializes user in reset password view model
         resetPasswordViewModel.user.value.let {
             if (it != null) {
                 it.username = binding.usernameEt.text.toString()
@@ -139,15 +138,14 @@ class ForgotPasswordFragment : Fragment() {
             }
         }
 
-        // attempt to log in inside lifecycleScope
+        // attempt to reset password in inside lifecycleScope
         lifecycleScope.launch {
             binding.progressbar.visibility = View.VISIBLE
             resetPasswordViewModel.resetPassword()
         }
     }
 
-    override fun onDestroyView()
-    {
+    override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
     }

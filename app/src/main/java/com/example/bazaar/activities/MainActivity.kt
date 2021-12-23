@@ -3,8 +3,6 @@ package com.example.bazaar.activities
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.NavOptions
-import androidx.navigation.Navigation
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.NavigationUI
 import com.example.bazaar.MyApplication
@@ -17,7 +15,7 @@ import com.example.bazaar.viewmodels.MainActivityViewModel
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
-    private lateinit var viewModel : MainActivityViewModel
+    private lateinit var viewModel: MainActivityViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,7 +47,7 @@ class MainActivity : AppCompatActivity() {
         )
         // set navGraph start destination
         navGraph.startDestination =
-                if(token != "Empty token!"){
+                if (token != "Empty token!") {
                     R.id.timelineFragment
                 } else {
                     R.id.loginFragment
@@ -60,7 +58,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     /** Access to UI elements from fragments **/
-    fun getBinding() : ActivityMainBinding{
+    fun getBinding(): ActivityMainBinding {
         return binding
     }
 

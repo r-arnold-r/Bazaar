@@ -1,15 +1,15 @@
 package com.example.bazaar.activities
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
+import androidx.appcompat.app.AppCompatActivity
 import com.example.bazaar.databinding.ActivitySplashBinding
 
 class SplashActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivitySplashBinding
-    private lateinit var view : View
+    private lateinit var view: View
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -19,18 +19,18 @@ class SplashActivity : AppCompatActivity() {
 
         binding.splashContainer.splashAnimateAndOpenMainActivity()
     }
-    private fun getBinding() = ActivitySplashBinding.inflate(layoutInflater)
-    private fun getView() =  binding.root
 
-    private fun androidx.constraintlayout.widget.ConstraintLayout.splashAnimateAndOpenMainActivity()
-    {
+    private fun getBinding() = ActivitySplashBinding.inflate(layoutInflater)
+    private fun getView() = binding.root
+
+    private fun androidx.constraintlayout.widget.ConstraintLayout.splashAnimateAndOpenMainActivity() {
         binding.splashContainer.alpha = 0F
-        binding.splashContainer.animate().setDuration(1500).alpha(1F).withEndAction{
+        binding.splashContainer.animate().setDuration(1500).alpha(1F).withEndAction {
             Intent(context, MainActivity::class.java).startActivityWithFadeAndFinish()
         }
     }
 
-    private fun Intent.startActivityWithFadeAndFinish(){
+    private fun Intent.startActivityWithFadeAndFinish() {
         startActivity(this)
         overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
         finish()

@@ -8,19 +8,17 @@ import com.example.bazaar.MyApplication
 import com.example.bazaar.SingleLiveEvent
 import com.example.bazaar.api.model.AddProductRequest
 import com.example.bazaar.api.model.AddProductResponse
-import com.example.bazaar.api.model.LoginRequest
-import com.example.bazaar.api.model.User
 import com.example.bazaar.manager.SharedPreferencesManager
 import com.example.bazaar.repository.Repository
 import retrofit2.HttpException
 
-class AddProductViewModel (val context: Context, private val repository: Repository) : ViewModel() {
+class AddProductViewModel(val context: Context, private val repository: Repository) : ViewModel() {
     var error: MutableLiveData<String> = MutableLiveData()
     var product = SingleLiveEvent<AddProductRequest>()
     var response = SingleLiveEvent<AddProductResponse>()
 
     init {
-        product.value = AddProductRequest("","",0,"",false,0f,"","",)
+        product.value = AddProductRequest("", "", 0, "", false, 0f, "", "")
     }
 
     suspend fun addProduct() {
@@ -43,14 +41,12 @@ class AddProductViewModel (val context: Context, private val repository: Reposit
 
             response.value = repository.addProduct(token!!, request)
 
-            Log.d("AddProductViewModel", "token = "  + MyApplication.sharedPreferences.getStringValue(SharedPreferencesManager.KEY_TOKEN, "Empty token!"))
         } catch (e: Exception) {
-            when(e) {
+            when (e) {
                 is HttpException -> {
-                    if(e.code() == 302) {
+                    if (e.code() == 302) {
                         Log.d("AddProductViewModel", "Token expired: $e")
-                    }
-                    else{
+                    } else {
                         Log.d("AddProductViewModel", "AddProductViewModel - exception: $e")
                         error.value = e.message.toString()
                     }

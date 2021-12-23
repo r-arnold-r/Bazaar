@@ -1,13 +1,10 @@
 package com.example.bazaar.fragments
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
-import android.widget.AutoCompleteTextView
-import android.widget.Spinner
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -17,8 +14,6 @@ import com.example.bazaar.databinding.FragmentCreateYourFareBinding
 import com.example.bazaar.repository.Repository
 import com.example.bazaar.viewmodels.AddProductViewModel
 import com.example.bazaar.viewmodels.AddProductViewModelFactory
-import com.example.bazaar.viewmodels.LoginViewModel
-import com.example.bazaar.viewmodels.LoginViewModelFactory
 import kotlinx.coroutines.launch
 
 
@@ -26,25 +21,24 @@ class CreateYourFareFragment : Fragment() {
 
 
     private var _binding: FragmentCreateYourFareBinding? = null
+
     // This property is only valid between onCreateView and
     // onDestroyView.
     private val binding get() = _binding!!
 
     private lateinit var addProductViewModel: AddProductViewModel
 
-    companion object
-    {
-        fun newInstance(): CreateYourFareFragment
-        {
+    companion object {
+        fun newInstance(): CreateYourFareFragment {
             return CreateYourFareFragment()
         }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        // creates LoginViewModel with factory
-        val factory = AddProductViewModelFactory(this.requireContext(), Repository())
-        addProductViewModel = ViewModelProvider(this, factory)[AddProductViewModel::class.java]
+        // creates addProductViewModel with factory
+        val addProductViewModelFactory = AddProductViewModelFactory(this.requireContext(), Repository())
+        addProductViewModel = ViewModelProvider(this, addProductViewModelFactory)[AddProductViewModel::class.java]
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -63,31 +57,31 @@ class CreateYourFareFragment : Fragment() {
         return view
     }
 
-    private fun launchMyFareBtnHandler(){
-        binding.launchMyFareBtn.setOnClickListener{
+    /**  Handles clicks on launchMyFare button**/
+    private fun launchMyFareBtnHandler() {
+        binding.launchMyFareBtn.setOnClickListener {
             tryToLaunchMyFare()
         }
     }
 
     /** Resets error message on double click **/
-    private fun resetErrorMessageOnTextInputLayouts()
-    {
-        binding.titleEt.setOnClickListener{
+    private fun resetErrorMessageOnTextInputLayouts() {
+        binding.titleEt.setOnClickListener {
             binding.titleTil.error = null
             binding.titleTil.isErrorEnabled = false
         }
-        binding.priceAmountEt.setOnClickListener{
+        binding.priceAmountEt.setOnClickListener {
             binding.priceAmountTil.error = null
             binding.priceAmountTil.isErrorEnabled = false
         }
-        binding.shortDescriptionEt.setOnClickListener{
+        binding.shortDescriptionEt.setOnClickListener {
             binding.shortDescriptionTil.error = null
             binding.shortDescriptionTil.isErrorEnabled = false
         }
     }
 
-    private fun tryToLaunchMyFare()
-    {
+    /**  Tries to launch myFareFragment with lifecycleScope **/
+    private fun tryToLaunchMyFare() {
         // make launch my fare button not clickable
         binding.launchMyFareBtn.isClickable = false
 
@@ -100,26 +94,26 @@ class CreateYourFareFragment : Fragment() {
         binding.shortDescriptionTil.isErrorEnabled = false
 
         // analyzes wrong inputs
-        if(binding.titleEt.text.trim().isEmpty()){
+        if (binding.titleEt.text.trim().isEmpty()) {
             binding.titleTil.error = "Please input the title!"
-            // make login button clickable
+            // make launchMyFare button clickable
             binding.launchMyFareBtn.isClickable = true
             return
         }
-        if(binding.priceAmountEt.text.trim().isEmpty()){
+        if (binding.priceAmountEt.text.trim().isEmpty()) {
             binding.priceAmountTil.error = "Please input the price!"
-            // make login button clickable
+            // make launchMyFare button clickable
             binding.launchMyFareBtn.isClickable = true
             return
         }
-        if(binding.shortDescriptionEt.text.trim().isEmpty()){
+        if (binding.shortDescriptionEt.text.trim().isEmpty()) {
             binding.shortDescriptionTil.error = "Please input the description!"
-            // make login button clickable
+            // make launchMyFare button clickable
             binding.launchMyFareBtn.isClickable = true
             return
         }
 
-        // initializes user in login view model
+        // initializes product in view model
         addProductViewModel.product.value.let {
             if (it != null) {
                 it.title = binding.titleEt.text.toString()
@@ -133,7 +127,7 @@ class CreateYourFareFragment : Fragment() {
             }
         }
 
-        // attempt to log in inside lifecycleScope
+        // attempt to add product inside lifecycleScope
         lifecycleScope.launch {
             addProductViewModel.addProduct()
         }
@@ -142,16 +136,16 @@ class CreateYourFareFragment : Fragment() {
         binding.launchMyFareBtn.isClickable = true
     }
 
-    /** **/
-    private fun addProductSuccessful(){
-        addProductViewModel.response.observe(viewLifecycleOwner){
-            Log.d("yyy", "success: ${addProductViewModel.response.value}")
+    /** If product was added successfully**/
+    private fun addProductSuccessful() {
+        addProductViewModel.response.observe(viewLifecycleOwner) {
             findNavController().navigate(R.id.action_createYourFareFragment_to_myMarketFragment)
             binding.launchMyFareBtn.isClickable = true
         }
     }
 
-    private fun toolbarHandler(){
+    /** Initializes toolbar**/
+    private fun toolbarHandler() {
         binding.toolbar.setNavigationIcon(R.drawable.ic_toolbar_arrow)
         binding.toolbar.setNavigationOnClickListener {
             // back button pressed
@@ -159,7 +153,8 @@ class CreateYourFareFragment : Fragment() {
         }
     }
 
-    private fun priceAmountSpinnerHandler(){
+    /** Initialize priceAmount spinner**/
+    private fun priceAmountSpinnerHandler() {
         ArrayAdapter.createFromResource(
                 requireContext(),
                 R.array.price_amount_array,
@@ -172,7 +167,8 @@ class CreateYourFareFragment : Fragment() {
         }
     }
 
-    private fun availableAmountSpinnerHandler(){
+    /** Initializes availableAmount spinner **/
+    private fun availableAmountSpinnerHandler() {
         ArrayAdapter.createFromResource(
                 requireContext(),
                 R.array.available_amount_array,
@@ -185,19 +181,18 @@ class CreateYourFareFragment : Fragment() {
         }
     }
 
-    private fun switchHandler(){
+    /**  Controls switch **/
+    private fun switchHandler() {
         binding.switchAiSc.setOnCheckedChangeListener { _, isChecked ->
-            if(isChecked){
+            if (isChecked) {
                 binding.switchAiTv.text = "Active"
-            }
-            else{
+            } else {
                 binding.switchAiTv.text = "Inactive"
             }
         }
     }
 
-    override fun onDestroyView()
-    {
+    override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
     }

@@ -1,12 +1,10 @@
 package com.example.bazaar.fragments
 
 import android.os.Bundle
-import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -17,21 +15,22 @@ import com.example.bazaar.MarginItemDecoration
 import com.example.bazaar.MyApplication
 import com.example.bazaar.R
 import com.example.bazaar.adapter.OrderAdapter
-import com.example.bazaar.adapter.ProductAdapter
 import com.example.bazaar.api.model.Orders
-import com.example.bazaar.api.model.ProductResponse
 import com.example.bazaar.api.model.User
 import com.example.bazaar.databinding.FragmentMyFaresBinding
-import com.example.bazaar.databinding.FragmentMyMarketBinding
 import com.example.bazaar.manager.SharedPreferencesManager
 import com.example.bazaar.repository.Repository
 import com.example.bazaar.utils.ApiString
-import com.example.bazaar.viewmodels.*
+import com.example.bazaar.viewmodels.GetOrderViewModel
+import com.example.bazaar.viewmodels.GetOrderViewModelFactory
+import com.example.bazaar.viewmodels.UpdateOrderViewModel
+import com.example.bazaar.viewmodels.UpdateOrderViewModelFactory
 import kotlinx.coroutines.launch
 
-class MyFaresFragment : Fragment() , OrderAdapter.ItemClickListener{
+class MyFaresFragment : Fragment(), OrderAdapter.ItemClickListener {
 
     private var _binding: FragmentMyFaresBinding? = null
+
     // This property is only valid between onCreateView and
     // onDestroyView.
     private val binding get() = _binding!!
@@ -43,30 +42,25 @@ class MyFaresFragment : Fragment() , OrderAdapter.ItemClickListener{
     private lateinit var recyclerView: RecyclerView
     private lateinit var orderAdapter: OrderAdapter
 
-    companion object
-    {
-        fun newInstance(): MyFaresFragment
-        {
+    companion object {
+        fun newInstance(): MyFaresFragment {
             return MyFaresFragment()
         }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        Log.d("xxx", "user = " + MyApplication.sharedPreferences.getUserValue(
-            SharedPreferencesManager.KEY_USER, User()
-        ))
 
-        val getOrderViewModelFactory =  GetOrderViewModelFactory(this.requireContext(), Repository())
+        val getOrderViewModelFactory = GetOrderViewModelFactory(this.requireContext(), Repository())
         getOrderViewModel = ViewModelProvider(this, getOrderViewModelFactory)[GetOrderViewModel::class.java]
 
-        val updateOrderViewModelFactory =  UpdateOrderViewModelFactory(this.requireContext(), Repository())
+        val updateOrderViewModelFactory = UpdateOrderViewModelFactory(this.requireContext(), Repository())
         updateOrderViewModel = ViewModelProvider(this, updateOrderViewModelFactory)[UpdateOrderViewModel::class.java]
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+            inflater: LayoutInflater, container: ViewGroup?,
+            savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
         _binding = FragmentMyFaresBinding.inflate(inflater, container, false)
@@ -88,15 +82,16 @@ class MyFaresFragment : Fragment() , OrderAdapter.ItemClickListener{
         return view
     }
 
-    private fun handleToggleButtons()
-    {
+    /**  Handles toggle buttons which control if we are in OngoingSales or OngoingOrders**/
+    private fun handleToggleButtons() {
         binding.ongoingOrdersTbtn.isChecked = false
         binding.ongoingSalesTbtn.isClickable = false
         binding.ongoingOrdersTbtn.isClickable = true
 
-        binding.ongoingSalesTbtn.setOnCheckedChangeListener{ _, isChecked ->
-            if(isChecked){
-                if(binding.ongoingOrdersTbtn.isChecked){
+        binding.ongoingSalesTbtn.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked) {
+                // Ongoing Sales
+                if (binding.ongoingOrdersTbtn.isChecked) {
                     binding.ongoingOrdersTbtn.isChecked = false
                     binding.ongoingSalesTbtn.isClickable = false
                     binding.ongoingOrdersTbtn.isClickable = true
@@ -106,9 +101,10 @@ class MyFaresFragment : Fragment() , OrderAdapter.ItemClickListener{
             }
         }
 
-        binding.ongoingOrdersTbtn.setOnCheckedChangeListener{ _, isChecked ->
-            if(isChecked){
-                if(binding.ongoingSalesTbtn.isChecked){
+        binding.ongoingOrdersTbtn.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked) {
+                // Ongoing Orders
+                if (binding.ongoingSalesTbtn.isChecked) {
                     binding.ongoingSalesTbtn.isChecked = false
                     binding.ongoingOrdersTbtn.isClickable = false
                     binding.ongoingSalesTbtn.isClickable = true
@@ -120,8 +116,8 @@ class MyFaresFragment : Fragment() , OrderAdapter.ItemClickListener{
 
     }
 
-    private fun getOngoingOrders()
-    {
+    /** Sets filters to set OngoingOrders content**/
+    private fun getOngoingOrders() {
         val mapOfFilter = mutableMapOf<String, String>()
 
         mapOfFilter["username"] = MyApplication.sharedPreferences.getUserValue(
@@ -135,8 +131,8 @@ class MyFaresFragment : Fragment() , OrderAdapter.ItemClickListener{
 
     }
 
-    private fun getOngoingSales()
-    {
+    /** Sets filters to set OngoingSales content**/
+    private fun getOngoingSales() {
         val mapOfFilter = mutableMapOf<String, String>()
 
         mapOfFilter["owner_username"] = MyApplication.sharedPreferences.getUserValue(
@@ -149,33 +145,36 @@ class MyFaresFragment : Fragment() , OrderAdapter.ItemClickListener{
         getOrderViewModel.filter.value = filter.getString()
     }
 
-    private fun ordersViewModelFilterObservable(){
-        getOrderViewModel.filter.observe(viewLifecycleOwner){
+    /**called when filter call succeeds**/
+    private fun ordersViewModelFilterObservable() {
+        getOrderViewModel.filter.observe(viewLifecycleOwner) {
             getOrders()
         }
     }
 
-    private fun ordersViewModelErrorObservable(){
-        updateOrderViewModel.error.observe(viewLifecycleOwner){
+    /**called when error occured**/
+    private fun ordersViewModelErrorObservable() {
+        updateOrderViewModel.error.observe(viewLifecycleOwner) {
             getOrders()
         }
     }
 
-    private fun getOrders()
-    {
+    /**calls getOrder after filter was applied**/
+    private fun getOrders() {
         lifecycleScope.launch {
             getOrderViewModel.getOrder()
         }
     }
 
-    private fun getOrdersViewModelProductsObservable(view: View){
-        getOrderViewModel.getOrderListResponse.observe(viewLifecycleOwner){
+    /**called when getOrderListResponse got a value**/
+    private fun getOrdersViewModelProductsObservable(view: View) {
+        getOrderViewModel.getOrderListResponse.observe(viewLifecycleOwner) {
             recycleViewAndAdapterHandler(view, getOrderViewModel.getOrderListResponse.value?.orders!!.toMutableList())
         }
     }
 
-    private fun recycleViewAndAdapterHandler(view: View, orders: MutableList<Orders>)
-    {
+    /**initializes recycleView and adapter**/
+    private fun recycleViewAndAdapterHandler(view: View, orders: MutableList<Orders>) {
         //creating and setting up adapter with recyclerView
         recyclerView = binding.recyclerViewProducts
 
@@ -188,7 +187,7 @@ class MyFaresFragment : Fragment() , OrderAdapter.ItemClickListener{
         recyclerView.itemAnimator = DefaultItemAnimator()
         recyclerView.adapter = orderAdapter
 
-        if(!recyclerViewDecorated){
+        if (!recyclerViewDecorated) {
             recyclerView.addItemDecoration(
                     MarginItemDecoration(
                             resources.getDimensionPixelSize(R.dimen.dimen_margin_horizontal_in_dp),
@@ -210,8 +209,8 @@ class MyFaresFragment : Fragment() , OrderAdapter.ItemClickListener{
                 R.id.nav_settings -> {
                     // Save profile changes
                     val bundle = Bundle()
-                    bundle.putString("username",  MyApplication.sharedPreferences.getUserValue(
-                        SharedPreferencesManager.KEY_USER, User()
+                    bundle.putString("username", MyApplication.sharedPreferences.getUserValue(
+                            SharedPreferencesManager.KEY_USER, User()
                     ).username)
                     findNavController().navigate(R.id.action_myFaresFragment_to_settingsFragment, bundle)
                     true
@@ -231,14 +230,14 @@ class MyFaresFragment : Fragment() , OrderAdapter.ItemClickListener{
 
     }
 
-    private fun updateOrderSuccessful(){
-        updateOrderViewModel.updateOrderResponse.observe(viewLifecycleOwner){
-            Log.d("MyFaresFragment", "updateOrderSuccessful: YUHUU")
+    /**called when updateOrderResponse got a value**/
+    private fun updateOrderSuccessful() {
+        updateOrderViewModel.updateOrderResponse.observe(viewLifecycleOwner) {
+
         }
     }
 
-    override fun onDestroyView()
-    {
+    override fun onDestroyView() {
         super.onDestroyView()
         recyclerViewDecorated = false
         _binding = null

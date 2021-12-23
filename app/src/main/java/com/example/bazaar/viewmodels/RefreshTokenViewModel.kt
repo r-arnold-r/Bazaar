@@ -6,12 +6,10 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.bazaar.MyApplication
 import com.example.bazaar.SingleLiveEvent
-import com.example.bazaar.api.model.ProductsListResponse
 import com.example.bazaar.manager.SharedPreferencesManager
 import com.example.bazaar.repository.Repository
-import retrofit2.HttpException
 
-class RefreshTokenViewModel  (val context: Context, val repository: Repository) : ViewModel() {
+class RefreshTokenViewModel(val context: Context, val repository: Repository) : ViewModel() {
     var error: MutableLiveData<String> = MutableLiveData()
     var success: SingleLiveEvent<Boolean> = SingleLiveEvent()
 
@@ -26,8 +24,7 @@ class RefreshTokenViewModel  (val context: Context, val repository: Repository) 
             MyApplication.sharedPreferences.putStringValue(SharedPreferencesManager.KEY_TOKEN, result.token)
 
             Log.d("RefreshTokenViewModel", result.toString())
-        }
-        catch (e: Exception) {
+        } catch (e: Exception) {
             error.value = e.message.toString()
             Log.d("RefreshTokenViewModel", e.toString())
 

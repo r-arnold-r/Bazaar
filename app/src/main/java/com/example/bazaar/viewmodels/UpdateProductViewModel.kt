@@ -8,21 +8,19 @@ import com.example.bazaar.MyApplication
 import com.example.bazaar.SingleLiveEvent
 import com.example.bazaar.api.model.UpdateProductRequest
 import com.example.bazaar.api.model.UpdateProductRespone
-import com.example.bazaar.api.model.UpdateUserDataListResponse
-import com.example.bazaar.api.model.UpdateUserDataRequest
 import com.example.bazaar.manager.SharedPreferencesManager
 import com.example.bazaar.repository.Repository
 
-class UpdateProductViewModel (val context: Context, private val repository: Repository) : ViewModel() {
+class UpdateProductViewModel(val context: Context, private val repository: Repository) : ViewModel() {
     var error: MutableLiveData<String> = MutableLiveData()
     var updateProductResponse = SingleLiveEvent<UpdateProductRespone>()
     var updateProductRequest = SingleLiveEvent<UpdateProductRequest>()
 
-    init{
+    init {
         updateProductRequest.value = UpdateProductRequest(0, false, "", 0f, "", "")
     }
 
-    suspend fun updateProduct(product_id : String) {
+    suspend fun updateProduct(product_id: String) {
 
         val request =
                 UpdateProductRequest(

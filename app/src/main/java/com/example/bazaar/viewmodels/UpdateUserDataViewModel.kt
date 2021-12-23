@@ -1,23 +1,23 @@
 package com.example.bazaar.viewmodels
 
-import com.example.bazaar.api.model.*
-
 import android.content.Context
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.bazaar.MyApplication
 import com.example.bazaar.SingleLiveEvent
+import com.example.bazaar.api.model.UpdateUserDataListResponse
+import com.example.bazaar.api.model.UpdateUserDataRequest
 import com.example.bazaar.manager.SharedPreferencesManager
 import com.example.bazaar.repository.Repository
 
-class UpdateUserDataViewModel (val context: Context, private val repository: Repository) : ViewModel() {
+class UpdateUserDataViewModel(val context: Context, private val repository: Repository) : ViewModel() {
     var error: MutableLiveData<String> = MutableLiveData()
     var updateUserDataListResponse = SingleLiveEvent<UpdateUserDataListResponse>()
     var updateUserDataRequest = SingleLiveEvent<UpdateUserDataRequest>()
 
-    init{
-        updateUserDataRequest.value = UpdateUserDataRequest("",0)
+    init {
+        updateUserDataRequest.value = UpdateUserDataRequest("", 0)
     }
 
     suspend fun updateUserData() {

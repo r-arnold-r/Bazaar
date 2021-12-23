@@ -10,7 +10,7 @@ import com.example.bazaar.api.model.GetOrdersListResponse
 import com.example.bazaar.manager.SharedPreferencesManager
 import com.example.bazaar.repository.Repository
 
-class GetOrderViewModel (val context: Context, private val repository: Repository) : ViewModel() {
+class GetOrderViewModel(val context: Context, private val repository: Repository) : ViewModel() {
     var error: MutableLiveData<String> = MutableLiveData()
     var getOrderListResponse = SingleLiveEvent<GetOrdersListResponse>()
 
@@ -40,8 +40,7 @@ class GetOrderViewModel (val context: Context, private val repository: Repositor
         }
     }
 
-    private fun removeSpecialCharacters()
-    {
+    private fun removeSpecialCharacters() {
         for (i in getOrderListResponse.value!!.orders.indices) {
             getOrderListResponse.value!!.orders[i].title = getOrderListResponse.value!!.orders[i].title.replace("\"", "")
             getOrderListResponse.value!!.orders[i].description = getOrderListResponse.value!!.orders[i].description.replace("\"", "")

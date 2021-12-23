@@ -27,8 +27,7 @@ class ResetPasswordViewModel(val context: Context, val repository: Repository) :
             val result = repository.resetPassword(request)
             success.value = true
 
-            Log.d("ResetPasswordViewModel", "token = "  + MyApplication.sharedPreferences.getStringValue(
-                SharedPreferencesManager.KEY_TOKEN, "Empty token!"))
+
         } catch (e: Exception) {
             error.value = e.message.toString()
             Log.d("ResetPasswordViewModel", "ResetPasswordViewModel - exception: $e")

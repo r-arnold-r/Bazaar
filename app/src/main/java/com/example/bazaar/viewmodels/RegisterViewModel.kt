@@ -22,13 +22,12 @@ class RegisterViewModel(val context: Context, val repository: Repository) : View
 
     suspend fun register() {
         val request =
-            RegisterRequest(username = user.value!!.username, password = user.value!!.password, email = user.value!!.email, phone_number = user.value!!.phone_number)
+                RegisterRequest(username = user.value!!.username, password = user.value!!.password, email = user.value!!.email, phone_number = user.value!!.phone_number)
         try {
             val result = repository.register(request)
             success.value = true
 
-            Log.d("RegisterViewModel", "token = "  + MyApplication.sharedPreferences.getStringValue(
-                SharedPreferencesManager.KEY_TOKEN, "Empty token!"))
+
         } catch (e: Exception) {
             error.value = e.message.toString()
             Log.d("RegisterViewModel", "RegisterViewModel - exception: $e")

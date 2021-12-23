@@ -10,11 +10,11 @@ import com.example.bazaar.api.model.RemoveProductResponse
 import com.example.bazaar.manager.SharedPreferencesManager
 import com.example.bazaar.repository.Repository
 
-class RemoveProductViewModel (val context: Context, private val repository: Repository) : ViewModel() {
+class RemoveProductViewModel(val context: Context, private val repository: Repository) : ViewModel() {
     var error: MutableLiveData<String> = MutableLiveData()
     var removeProductResponse = SingleLiveEvent<RemoveProductResponse>()
 
-    suspend fun removeProduct(product_id : String) {
+    suspend fun removeProduct(product_id: String) {
         try {
 
             val token = MyApplication.sharedPreferences.getStringValue(

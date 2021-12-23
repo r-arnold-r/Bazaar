@@ -3,14 +3,12 @@ package com.example.bazaar.adapter
 import android.annotation.SuppressLint
 import android.graphics.Color
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import androidx.appcompat.widget.AppCompatButton
 import androidx.navigation.findNavController
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.example.bazaar.MyApplication
 import com.example.bazaar.R
@@ -24,8 +22,7 @@ class ProductAdapter(
         private val view: View,
         private val mItemClickListener: ItemClickListener,
         private var products: MutableList<ProductResponse>,
-)
-    : RecyclerView.Adapter<ProductAdapter.DataViewHolder>(), Filterable {
+) : RecyclerView.Adapter<ProductAdapter.DataViewHolder>(), Filterable {
 
     var productsFilterList = ArrayList<ProductResponse>()
 
@@ -33,8 +30,7 @@ class ProductAdapter(
         productsFilterList = products as ArrayList<ProductResponse>
     }
 
-    fun getItemData (position : Int) : ProductResponse
-    {
+    fun getItemData(position: Int): ProductResponse {
         return productsFilterList[position]
     }
 
@@ -53,37 +49,35 @@ class ProductAdapter(
         holder.productNameTv.text = productsFilterList[position].title
         holder.profileNameTv.text = productsFilterList[position].username
 
-        if(productsFilterList[position].username ==  MyApplication.sharedPreferences.
-                getUserValue(SharedPreferencesManager.KEY_USER, User()).username)
-        {
+        if (productsFilterList[position].username == MyApplication.sharedPreferences.getUserValue(SharedPreferencesManager.KEY_USER, User()).username) {
+            // for owner
             holder.orderNowBtn?.visibility = View.GONE
             holder.aiLl?.visibility = View.VISIBLE
 
-            if(productsFilterList[position].is_active){
+            if (productsFilterList[position].is_active) {
                 holder.checkIv?.setImageResource(R.drawable.ic_checkmark)
                 holder.aiTv?.text = "Active"
                 holder.aiTv?.setTextColor(Color.parseColor("#00B5C0"))
-            }
-            else{
+            } else {
                 holder.checkIv?.setImageResource(R.drawable.ic_inactive)
                 holder.aiTv?.text = "Inactive"
                 holder.aiTv?.setTextColor(Color.parseColor("#9A9A9A"))
             }
-        }
-        else{
+        } else {
+            // for user
             holder.orderNowBtn?.visibility = View.VISIBLE
             holder.aiLl?.visibility = View.GONE
         }
 
 
-        holder.orderNowBtn?.setOnClickListener{
+        holder.orderNowBtn?.setOnClickListener {
 
             val bundle = Bundle()
             bundle.putParcelable("productResponse", productsFilterList[position])
             view.findNavController().navigate(R.id.productDetailFragment, bundle)
         }
 
-        holder.profileImageCiV.setOnClickListener{
+        holder.profileImageCiV.setOnClickListener {
             val bundle = Bundle()
             bundle.putString("username", holder.profileNameTv.text.toString())
             view.findNavController().navigate(R.id.settingsFragment, bundle)

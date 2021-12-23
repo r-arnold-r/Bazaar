@@ -1,6 +1,5 @@
 package com.example.bazaar.adapter
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -24,8 +23,7 @@ class OrderAdapter(
         private var orders: MutableList<Orders>,
         private val updateOrderViewModel: UpdateOrderViewModel,
         private val lifecycleOwner: LifecycleOwner
-)
-    : RecyclerView.Adapter<OrderAdapter.DataViewHolder>(), Filterable {
+) : RecyclerView.Adapter<OrderAdapter.DataViewHolder>(), Filterable {
 
 
     var ordersFilterList = ArrayList<Orders>()
@@ -61,68 +59,70 @@ class OrderAdapter(
         }
          */
 
-        if(ordersFilterList[position].owner_username ==
+        if (ordersFilterList[position].owner_username ==
                 MyApplication.sharedPreferences.getUserValue(SharedPreferencesManager.KEY_USER, User()).username) {
 
-                    holder.profileNameTv.text = ordersFilterList[position].username
+            //for on going sales view
 
-                isInOnGoingOrder = false
+            holder.profileNameTv.text = ordersFilterList[position].username
 
-                when (ordersFilterList[position].status.toLowerCase().capitalize())
-                {
-                    "Incoming", "Open" -> {
-                        holder.acceptFab.visibility = View.VISIBLE
-                        holder.acceptedFab.visibility = View.GONE
-                        holder.ignoreFab.visibility = View.VISIBLE
-                        holder.ignoredFab.visibility = View.GONE
-                        holder.waitingFab.visibility = View.GONE
-                        holder.statusSp.visibility = View.INVISIBLE
-                        holder.statusSp.isClickable = false
-                        true
-                    }
-                    "Accepted", "Delivering" -> {
+            isInOnGoingOrder = false
 
-                        holder.acceptFab.visibility = View.GONE
-                        holder.acceptedFab.visibility = View.VISIBLE
-                        holder.ignoreFab.visibility = View.GONE
-                        holder.ignoredFab.visibility = View.GONE
-                        holder.waitingFab.visibility = View.GONE
-                        holder.statusSp.visibility = View.VISIBLE
-                        holder.statusSp.isClickable = true
-                        holder.statusEt.visibility = View.GONE
-                        true
-                    }
-                    "Delivered" -> {
-                        holder.acceptFab.visibility = View.GONE
-                        holder.acceptedFab.visibility = View.VISIBLE
-                        holder.ignoreFab.visibility = View.GONE
-                        holder.ignoredFab.visibility = View.GONE
-                        holder.waitingFab.visibility = View.GONE
-                        holder.statusSp.visibility = View.INVISIBLE
-                        holder.statusSp.isClickable = false
-
-                        true
-                    }
-                    "Declined" -> {
-                        holder.acceptFab.visibility = View.GONE
-                        holder.acceptedFab.visibility = View.GONE
-                        holder.ignoreFab.visibility = View.GONE
-                        holder.ignoredFab.visibility = View.VISIBLE
-                        holder.waitingFab.visibility = View.GONE
-                        holder.statusSp.visibility = View.INVISIBLE
-                        holder.statusSp.isClickable = false
-                        true
-                    }
-                    else -> false
+            when (ordersFilterList[position].status.toLowerCase().capitalize()) {
+                "Incoming", "Open" -> {
+                    holder.acceptFab.visibility = View.VISIBLE
+                    holder.acceptedFab.visibility = View.GONE
+                    holder.ignoreFab.visibility = View.VISIBLE
+                    holder.ignoredFab.visibility = View.GONE
+                    holder.waitingFab.visibility = View.GONE
+                    holder.statusSp.visibility = View.INVISIBLE
+                    holder.statusSp.isClickable = false
+                    true
                 }
-        }
-        else{
+                "Accepted", "Delivering" -> {
+
+                    holder.acceptFab.visibility = View.GONE
+                    holder.acceptedFab.visibility = View.VISIBLE
+                    holder.ignoreFab.visibility = View.GONE
+                    holder.ignoredFab.visibility = View.GONE
+                    holder.waitingFab.visibility = View.GONE
+                    holder.statusSp.visibility = View.VISIBLE
+                    holder.statusSp.isClickable = true
+                    holder.statusEt.visibility = View.GONE
+                    true
+                }
+                "Delivered" -> {
+                    holder.acceptFab.visibility = View.GONE
+                    holder.acceptedFab.visibility = View.VISIBLE
+                    holder.ignoreFab.visibility = View.GONE
+                    holder.ignoredFab.visibility = View.GONE
+                    holder.waitingFab.visibility = View.GONE
+                    holder.statusSp.visibility = View.INVISIBLE
+                    holder.statusSp.isClickable = false
+
+                    true
+                }
+                "Declined" -> {
+                    holder.acceptFab.visibility = View.GONE
+                    holder.acceptedFab.visibility = View.GONE
+                    holder.ignoreFab.visibility = View.GONE
+                    holder.ignoredFab.visibility = View.VISIBLE
+                    holder.waitingFab.visibility = View.GONE
+                    holder.statusSp.visibility = View.INVISIBLE
+                    holder.statusSp.isClickable = false
+                    true
+                }
+                else -> false
+            }
+        } else {
+
+            //for on going order view
+
             isInOnGoingOrder = true
 
             holder.profileNameTv.text = ordersFilterList[position].owner_username
 
-            when (ordersFilterList[position].status.toLowerCase().capitalize())
-            {
+            when (ordersFilterList[position].status.toLowerCase().capitalize()) {
                 "Incoming", "Open" -> {
                     holder.acceptFab.visibility = View.GONE
                     holder.acceptedFab.visibility = View.GONE
@@ -172,94 +172,95 @@ class OrderAdapter(
             holder.statusSp.adapter = adapter
         }
 
-        holder.statusSp.setSelection(adapter.getPosition(ordersFilterList[position].status.toLowerCase().capitalize()),false)
-        holder.statusSp.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
+        holder.statusSp.setSelection(adapter.getPosition(ordersFilterList[position].status.toLowerCase().capitalize()), false)
+        holder.statusSp.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onNothingSelected(parent: AdapterView<*>?) {
             }
 
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, positionSpinner: Int, id: Long) {
                 var status = ""
 
-                    when (positionSpinner) {
-                        0 -> {
-                            status = "INCOMING"
-                            updateOrderViewModel.updateOrderRequest.value.let {
-                                if (it != null) {
-                                    it.title = ordersFilterList[position].title
-                                    it.price_per_unit = ordersFilterList[position].price_per_unit.toInt()
-                                    it.status = status
-                                }
+                //change status based on spinner item
+                when (positionSpinner) {
+                    0 -> {
+                        status = "INCOMING"
+                        updateOrderViewModel.updateOrderRequest.value.let {
+                            if (it != null) {
+                                it.title = ordersFilterList[position].title
+                                it.price_per_unit = ordersFilterList[position].price_per_unit.toInt()
+                                it.status = status
                             }
-                            lifecycleOwner.lifecycleScope.launch {
-                                updateOrderViewModel.updateOrder(ordersFilterList[position].order_id)
-                            }
+                        }
+                        lifecycleOwner.lifecycleScope.launch {
+                            updateOrderViewModel.updateOrder(ordersFilterList[position].order_id)
+                        }
 
-                            true
-                        }
-                        1 -> {
-                            status = "ACCEPTED"
-                            updateOrderViewModel.updateOrderRequest.value.let {
-                                if (it != null) {
-                                    it.title = ordersFilterList[position].title
-                                    it.price_per_unit = ordersFilterList[position].price_per_unit.toInt()
-                                    it.status = status
-                                }
-                            }
-                            lifecycleOwner.lifecycleScope.launch {
-                                updateOrderViewModel.updateOrder(ordersFilterList[position].order_id)
-                            }
-                            true
-                        }
-                        2 -> {
-                            status = "DECLINED"
-                            updateOrderViewModel.updateOrderRequest.value.let {
-                                if (it != null) {
-                                    it.title = ordersFilterList[position].title
-                                    it.price_per_unit = ordersFilterList[position].price_per_unit.toInt()
-                                    it.status = status
-                                }
-                            }
-                            lifecycleOwner.lifecycleScope.launch {
-                                updateOrderViewModel.updateOrder(ordersFilterList[position].order_id)
-                            }
-                            true
-                        }
-                        3 -> {
-                            status = "DELIVERING"
-                            updateOrderViewModel.updateOrderRequest.value.let {
-                                if (it != null) {
-                                    it.title = ordersFilterList[position].title
-                                    it.price_per_unit = ordersFilterList[position].price_per_unit.toInt()
-                                    it.status = status
-                                }
-                            }
-                            lifecycleOwner.lifecycleScope.launch {
-                                updateOrderViewModel.updateOrder(ordersFilterList[position].order_id)
-                            }
-                            true
-                        }
-                        4 -> {
-                            status = "DELIVERED"
-                            updateOrderViewModel.updateOrderRequest.value.let {
-                                if (it != null) {
-                                    it.title = ordersFilterList[position].title
-                                    it.price_per_unit = ordersFilterList[position].price_per_unit.toInt()
-                                    it.status = status
-                                }
-                            }
-                            lifecycleOwner.lifecycleScope.launch {
-                                updateOrderViewModel.updateOrder(ordersFilterList[position].order_id)
-                            }
-                            true
-                        }
-                        else -> false
+                        true
                     }
+                    1 -> {
+                        status = "ACCEPTED"
+                        updateOrderViewModel.updateOrderRequest.value.let {
+                            if (it != null) {
+                                it.title = ordersFilterList[position].title
+                                it.price_per_unit = ordersFilterList[position].price_per_unit.toInt()
+                                it.status = status
+                            }
+                        }
+                        lifecycleOwner.lifecycleScope.launch {
+                            updateOrderViewModel.updateOrder(ordersFilterList[position].order_id)
+                        }
+                        true
+                    }
+                    2 -> {
+                        status = "DECLINED"
+                        updateOrderViewModel.updateOrderRequest.value.let {
+                            if (it != null) {
+                                it.title = ordersFilterList[position].title
+                                it.price_per_unit = ordersFilterList[position].price_per_unit.toInt()
+                                it.status = status
+                            }
+                        }
+                        lifecycleOwner.lifecycleScope.launch {
+                            updateOrderViewModel.updateOrder(ordersFilterList[position].order_id)
+                        }
+                        true
+                    }
+                    3 -> {
+                        status = "DELIVERING"
+                        updateOrderViewModel.updateOrderRequest.value.let {
+                            if (it != null) {
+                                it.title = ordersFilterList[position].title
+                                it.price_per_unit = ordersFilterList[position].price_per_unit.toInt()
+                                it.status = status
+                            }
+                        }
+                        lifecycleOwner.lifecycleScope.launch {
+                            updateOrderViewModel.updateOrder(ordersFilterList[position].order_id)
+                        }
+                        true
+                    }
+                    4 -> {
+                        status = "DELIVERED"
+                        updateOrderViewModel.updateOrderRequest.value.let {
+                            if (it != null) {
+                                it.title = ordersFilterList[position].title
+                                it.price_per_unit = ordersFilterList[position].price_per_unit.toInt()
+                                it.status = status
+                            }
+                        }
+                        lifecycleOwner.lifecycleScope.launch {
+                            updateOrderViewModel.updateOrder(ordersFilterList[position].order_id)
+                        }
+                        true
+                    }
+                    else -> false
+                }
 
             }
         }
 
-
-        holder.acceptFab.setOnClickListener{
+        //change status based on button
+        holder.acceptFab.setOnClickListener {
             var status = "ACCEPTED"
 
             updateOrderViewModel.updateOrderRequest.value.let {
@@ -269,15 +270,14 @@ class OrderAdapter(
                     it.status = status
                 }
             }
-            Log.d("SAS", status)
             lifecycleOwner.lifecycleScope.launch {
                 updateOrderViewModel.updateOrder(ordersFilterList[position].order_id)
             }
         }
 
-        holder.ignoreFab.setOnClickListener{
+        //change status based on button
+        holder.ignoreFab.setOnClickListener {
             var status = "DECLINED"
-            Log.d("SAS", status)
             updateOrderViewModel.updateOrderRequest.value.let {
                 if (it != null) {
                     it.title = ordersFilterList[position].title
@@ -296,12 +296,11 @@ class OrderAdapter(
         holder.amountEditTv.text = ordersFilterList[position].units
         holder.descriptionTv.text = ordersFilterList[position].description
 
-        holder.arrowIv.setOnClickListener{
-            if(holder.descriptionTv.visibility == View.GONE){
+        holder.arrowIv.setOnClickListener {
+            if (holder.descriptionTv.visibility == View.GONE) {
                 holder.descriptionTv.visibility = View.VISIBLE
                 holder.arrowIv.setImageResource(R.drawable.ic_arrow_up_order_item)
-            }
-            else{
+            } else {
                 holder.descriptionTv.visibility = View.GONE
                 holder.arrowIv.setImageResource(R.drawable.ic_arrow_down_order_item)
             }

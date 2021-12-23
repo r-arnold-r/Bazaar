@@ -2,7 +2,6 @@ package com.example.bazaar.repository
 
 import com.example.bazaar.api.RetrofitInstance
 import com.example.bazaar.api.model.*
-import retrofit2.Retrofit
 
 class Repository {
     suspend fun login(request: LoginRequest): LoginResponse {
@@ -17,18 +16,17 @@ class Repository {
         return RetrofitInstance.api.resetPassword(request)
     }
 
-    suspend fun getProducts(token: String
-                            ,filter: String = ""//"{\"username\":\"Sutyii\"}"
-                            ,sort: String = ""//"{\"title\" : 1 }"
-                            ,limit: Int = 1000): ProductsListResponse {
-        return RetrofitInstance.api.getProducts(token,filter, sort, limit)
+    suspend fun getProducts(token: String, filter: String = ""//"{\"username\":\"Sutyii\"}"
+                            , sort: String = ""//"{\"title\" : 1 }"
+                            , limit: Int = 1000): ProductsListResponse {
+        return RetrofitInstance.api.getProducts(token, filter, sort, limit)
     }
 
     suspend fun refreshToken(token: String): RefreshTokenResponse {
         return RetrofitInstance.api.refreshToken(token)
     }
 
-    suspend fun addProduct(token: String, request: AddProductRequest) : AddProductResponse {
+    suspend fun addProduct(token: String, request: AddProductRequest): AddProductResponse {
         return RetrofitInstance.api.addProduct(
                 token,
                 request.title,
@@ -37,7 +35,7 @@ class Repository {
                 request.units, request.is_active,
                 request.rating.toDouble(),
                 request.amount_type,
-                request.price_type )
+                request.price_type)
     }
 
     suspend fun getUserInfo(username: String): GetUserInfoListResponse {
@@ -56,14 +54,16 @@ class Repository {
         return RetrofitInstance.api.updateProduct(token, product_id, request)
     }
 
-    suspend fun getOrders(token: String
-                          ,filter: String = ""//"{\"username\":\"Sutyii\"}"
-                          ,sort: String = ""//"{\"title\" : 1 }"
-                          ,limit: Int = 1000,): GetOrdersListResponse {
+    suspend fun getOrders(
+            token: String,
+            filter: String = "",//"{\"username\":\"Sutyii\"}"
+            sort: String = "",//"{\"title\" : 1 }"
+            limit: Int = 1000,
+    ): GetOrdersListResponse {
         return RetrofitInstance.api.getOrders(token, filter, sort, limit)
     }
 
-    suspend fun addOrder(token: String, request: AddOrderRequest) : AddOrderResponse {
+    suspend fun addOrder(token: String, request: AddOrderRequest): AddOrderResponse {
         return RetrofitInstance.api.addOrder(
                 token,
                 request.title,

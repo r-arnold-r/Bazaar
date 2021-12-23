@@ -20,7 +20,7 @@ class GetUserInfoViewModel (val context: Context, private val repository: Reposi
 
         } catch (e: Exception) {
 
-                    Log.d("GetUserInfoViewModel", "exception: ${e.toString()}")
+                    Log.d("GetUserInfoViewModel", "exception: $e")
                     error.value = e.message.toString()
 
         }

@@ -10,9 +10,13 @@ import android.view.ViewGroup
 import android.widget.*
 import androidx.appcompat.widget.AppCompatButton
 import androidx.navigation.findNavController
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
+import com.example.bazaar.MyApplication
 import com.example.bazaar.R
 import com.example.bazaar.api.model.ProductResponse
+import com.example.bazaar.api.model.User
+import com.example.bazaar.manager.SharedPreferencesManager
 import de.hdodenhof.circleimageview.CircleImageView
 
 
@@ -20,7 +24,6 @@ class ProductAdapter(
         private val view: View,
         private val mItemClickListener: ItemClickListener,
         private var products: MutableList<ProductResponse>,
-        private val itemViewInt: Int
 )
     : RecyclerView.Adapter<ProductAdapter.DataViewHolder>(), Filterable {
 
@@ -37,7 +40,7 @@ class ProductAdapter(
 
     override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): DataViewHolder {
         val itemView =
-                LayoutInflater.from(viewGroup.context).inflate(itemViewInt, viewGroup, false)
+                LayoutInflater.from(viewGroup.context).inflate(R.layout.product_item, viewGroup, false)
         return DataViewHolder(itemView, mItemClickListener)
     }
 
@@ -50,21 +53,34 @@ class ProductAdapter(
         holder.productNameTv.text = productsFilterList[position].title
         holder.profileNameTv.text = productsFilterList[position].username
 
-        if(productsFilterList[position].is_active){
-            holder.checkIv?.setImageResource(R.drawable.ic_checkmark)
-            holder.aiTv?.text = "Active"
-            holder.aiTv?.setTextColor(Color.parseColor("#00B5C0"))
+        if(productsFilterList[position].username ==  MyApplication.sharedPreferences.
+                getUserValue(SharedPreferencesManager.KEY_USER, User()).username)
+        {
+            holder.orderNowBtn?.visibility = View.GONE
+            holder.aiLl?.visibility = View.VISIBLE
+
+            if(productsFilterList[position].is_active){
+                holder.checkIv?.setImageResource(R.drawable.ic_checkmark)
+                holder.aiTv?.text = "Active"
+                holder.aiTv?.setTextColor(Color.parseColor("#00B5C0"))
+            }
+            else{
+                holder.checkIv?.setImageResource(R.drawable.ic_inactive)
+                holder.aiTv?.text = "Inactive"
+                holder.aiTv?.setTextColor(Color.parseColor("#9A9A9A"))
+            }
         }
         else{
-            holder.checkIv?.setImageResource(R.drawable.ic_inactive)
-            holder.aiTv?.text = "Inactive"
-            holder.aiTv?.setTextColor(Color.parseColor("#9A9A9A"))
+            holder.orderNowBtn?.visibility = View.VISIBLE
+            holder.aiLl?.visibility = View.GONE
         }
 
 
         holder.orderNowBtn?.setOnClickListener{
 
-            Log.d("xxx", "Product was clicked for order: " + productsFilterList[position].toString())
+            val bundle = Bundle()
+            bundle.putParcelable("productResponse", productsFilterList[position])
+            view.findNavController().navigate(R.id.productDetailFragment, bundle)
         }
 
         holder.profileImageCiV.setOnClickListener{
@@ -90,6 +106,7 @@ class ProductAdapter(
         var orderNowBtn: AppCompatButton? = view.findViewById(R.id.order_now_btn)
         var checkIv: ImageView? = view.findViewById(R.id.check_iv)
         var aiTv: TextView? = view.findViewById(R.id.ai_tv)
+        var aiLl: LinearLayout? = view.findViewById(R.id.ai_ll)
 
         var mItemClickListener: ItemClickListener? = itemClickListener
 

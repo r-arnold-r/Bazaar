@@ -91,11 +91,45 @@
         android:textAllCaps="false"
         android:textColor="@color/B_white"
         android:textSize="12sp"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/profile_name_tv"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/profile_image_civ"
         app:layout_constraintTop_toBottomOf="@+id/product_name_tv"
         app:layout_constraintVertical_bias="0.019" />
+
+    <LinearLayout
+        android:id="@+id/ai_ll"
+        android:layout_width="120dp"
+        android:layout_height="32dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/profile_name_tv"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/profile_image_civ"
+        app:layout_constraintTop_toBottomOf="@+id/product_name_tv"
+        app:layout_constraintVertical_bias="0.019"
+        android:visibility="gone"
+        android:layout_marginTop="14dp"
+        android:gravity="start">
+
+        <ImageView
+            android:id="@+id/check_iv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_checkmark"
+            android:layout_marginRight="5dp"
+            android:gravity="center" />
+
+        <TextView
+            android:id="@+id/ai_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/B_turqoise"
+            android:textSize="14sp"
+            android:gravity="center"
+            android:text="Active"/>
+
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

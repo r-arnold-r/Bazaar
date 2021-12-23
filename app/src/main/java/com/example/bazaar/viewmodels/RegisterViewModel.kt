@@ -31,7 +31,7 @@ class RegisterViewModel(val context: Context, val repository: Repository) : View
                 SharedPreferencesManager.KEY_TOKEN, "Empty token!"))
         } catch (e: Exception) {
             error.value = e.message.toString()
-            Log.d("RegisterViewModel", "RegisterViewModel - exception: ${e.toString()}")
+            Log.d("RegisterViewModel", "RegisterViewModel - exception: $e")
         }
     }
 }

@@ -38,7 +38,7 @@ class UpdateUserDataViewModel (val context: Context, private val repository: Rep
 
         } catch (e: Exception) {
 
-            Log.d("UpdateUserDataViewModel", "exception: ${e.toString()}")
+            Log.d("UpdateUserDataViewModel", "exception: $e")
             error.value = e.message.toString()
 
         }

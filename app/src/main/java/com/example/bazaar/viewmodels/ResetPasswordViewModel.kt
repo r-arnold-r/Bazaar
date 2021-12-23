@@ -31,7 +31,7 @@ class ResetPasswordViewModel(val context: Context, val repository: Repository) :
                 SharedPreferencesManager.KEY_TOKEN, "Empty token!"))
         } catch (e: Exception) {
             error.value = e.message.toString()
-            Log.d("ResetPasswordViewModel", "ResetPasswordViewModel - exception: ${e.toString()}")
+            Log.d("ResetPasswordViewModel", "ResetPasswordViewModel - exception: $e")
         }
     }
 }

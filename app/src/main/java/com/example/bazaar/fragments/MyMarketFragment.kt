@@ -92,7 +92,10 @@ class MyMarketFragment : Fragment(), ProductAdapter.ItemClickListener{
         binding.searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
 
             override fun onQueryTextChange(newText: String): Boolean {
-                productAdapter.filter.filter(newText)
+                if(::productAdapter.isInitialized) {
+                    productAdapter.filter.filter(newText)
+                }
+
                 return false
             }
 
@@ -138,7 +141,7 @@ class MyMarketFragment : Fragment(), ProductAdapter.ItemClickListener{
         recyclerView = binding.recyclerViewProducts
 
         //creating and setting up adapter with recyclerView
-        productAdapter = ProductAdapter(view, this, products, R.layout.product_item_my_market) //setting the data and listener for adapter
+        productAdapter = ProductAdapter(view, this, products) //setting the data and listener for adapter
 
         val layoutManager: RecyclerView.LayoutManager =
                 LinearLayoutManager(activity, RecyclerView.VERTICAL, false)

@@ -42,16 +42,16 @@ class LoginViewModel(val context: Context, private val repository: Repository) :
             when(e) {
                 is HttpException -> {
                     if(e.code() == 302) {
-                        Log.d("LoginViewModel", "Token expired: ${e.toString()}")
+                        Log.d("LoginViewModel", "Token expired: $e")
                         error.value = e.message.toString()
                     }
                     else{
-                        Log.d("LoginViewModel", "LoginViewModel - exception: ${e.toString()}")
+                        Log.d("LoginViewModel", "LoginViewModel - exception: $e")
                         error.value = e.message.toString()
                     }
                 }
                 else -> {
-                    Log.d("LoginViewModel", "LoginViewModel - exception: ${e.toString()}")
+                    Log.d("LoginViewModel", "LoginViewModel - exception: $e")
                     error.value = e.message.toString()
                 }
             }

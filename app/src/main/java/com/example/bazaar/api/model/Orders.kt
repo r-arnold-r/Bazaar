@@ -66,9 +66,9 @@ data class RemoveOrderResponse (
 
 @JsonClass(generateAdapter = true)
 data class UpdateOrderRequest (
-        val price_per_unit: Int,
-        val status: String,
-        val title : String
+        var price_per_unit: Int,
+        var status: String,
+        var title : String
 )
 
 @JsonClass(generateAdapter = true)

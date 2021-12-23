@@ -6,6 +6,8 @@ import com.google.gson.annotations.SerializedName
 import com.squareup.moshi.JsonClass
 import kotlinx.parcelize.Parcelize
 import retrofit2.http.Field
+import java.util.*
+import kotlin.reflect.jvm.internal.impl.load.kotlin.JvmType
 
 @Parcelize
 @JsonClass(generateAdapter = true)
@@ -21,8 +23,7 @@ import retrofit2.http.Field
         var description : String,
         var title : String,
         val images : List<String>,
-        val creation_time : Long,
-        val messages : List<String>
+        val creation_time : Long
     ) : Parcelable
 
 @JsonClass(generateAdapter = true)
@@ -101,5 +102,5 @@ data class Updated_product_item (
         val title : String,
         val images : List<String>,
         val creation_time : Long,
-        val messages : List<String>
+        val messages : List<Object>
 )

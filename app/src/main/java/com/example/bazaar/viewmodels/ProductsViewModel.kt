@@ -45,20 +45,20 @@ class ProductsViewModel (val context: Context, val repository: Repository) : Vie
                 is HttpException -> {
                     if(e.code() == 302) {
                         error.value = "302"
-                        Log.d("ProductsViewModel", "Token expired: ${e.toString()}")
+                        Log.d("ProductsViewModel", "Token expired: $e")
                     }
                     if(e.code() == 301) {
                         error.value = "301"
-                        Log.d("ProductsViewModel", "Invalid token: ${e.toString()}")
+                        Log.d("ProductsViewModel", "Invalid token: $e")
                     }
                     else{
-                        Log.d("ProductsViewModel", "AddProductViewModel - exception: ${e.toString()}")
+                        Log.d("ProductsViewModel", "AddProductViewModel - exception: $e")
                         error.value = e.message.toString()
                     }
                 }
                 else -> {
                     error.value = e.message.toString()
-                    Log.d("ProductsViewModel", "exception: ${e.toString()}")
+                    Log.d("ProductsViewModel", "exception: $e")
                 }
             }
         }

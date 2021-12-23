@@ -6,8 +6,8 @@
     <string name="azaar">azaar</string>
 
     <string-array name="spinner_mode">
-        <item>Seller</item>
         <item>Time</item>
+        <item>Seller</item>
         <item>Product</item>
     </string-array>
 
@@ -23,7 +23,7 @@
         <item>Db</item>
     </string-array>
 
-    <string-array name="oder_options_array">
+    <string-array name="order_options_array">
         <item>Incoming</item>
         <item>Accepted</item>
         <item>Declined</item>

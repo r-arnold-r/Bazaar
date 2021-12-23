@@ -92,11 +92,14 @@ class TimelineFragment : Fragment() , ProductAdapter.ItemClickListener{
         binding.searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
 
             override fun onQueryTextChange(newText: String): Boolean {
-                productAdapter.filter.filter(newText)
+                if(::productAdapter.isInitialized)
+                {
+                    productAdapter.filter.filter(newText)
 
-                Handler(Looper.getMainLooper()).postDelayed({
-                    binding.numberOfFairsTv.text = productAdapter.productsFilterList.count().toString() + " Fairs"
-                }, 100)
+                    Handler(Looper.getMainLooper()).postDelayed({
+                        binding.numberOfFairsTv.text = productAdapter.productsFilterList.count().toString() + " Fairs"
+                    }, 100)
+                }
 
                 return false
             }
@@ -131,7 +134,17 @@ class TimelineFragment : Fragment() , ProductAdapter.ItemClickListener{
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 when (position) {
                     0 -> {
+                        val mapOfSort = mutableMapOf<String, String>()
+                        mapOfSort["creation_time"] = "-1"
 
+                        val sorter = ApiString.Builder()
+                                .map(mapOfSort)
+                                .build()
+
+                        productsViewModel.sort.value = sorter.getString()
+                        true
+                    }
+                    1 -> {
                         if (productsViewModel.sort.value != null) {
                             val mapOfSort = mutableMapOf<String, String>()
                             mapOfSort["username"] = "1"
@@ -143,18 +156,6 @@ class TimelineFragment : Fragment() , ProductAdapter.ItemClickListener{
                             productsViewModel.sort.value = sorter.getString()
                         }
 
-                        true
-                    }
-                    1 -> {
-
-                        val mapOfSort = mutableMapOf<String, String>()
-                        mapOfSort["creation_time"] = "1"
-
-                        val sorter = ApiString.Builder()
-                                .map(mapOfSort)
-                                .build()
-
-                        productsViewModel.sort.value = sorter.getString()
                         true
                     }
                     2 -> {
@@ -323,7 +324,7 @@ class TimelineFragment : Fragment() , ProductAdapter.ItemClickListener{
         recyclerView = binding.recyclerViewProducts
 
         //creating and setting up adapter with recyclerView
-        productAdapter = ProductAdapter(view, this, products, R.layout.product_item) //setting the data and listener for adapter
+        productAdapter = ProductAdapter(view, this, products) //setting the data and listener for adapter
 
         val layoutManager: RecyclerView.LayoutManager =
                 LinearLayoutManager(activity, RecyclerView.VERTICAL, false)

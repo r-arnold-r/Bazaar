@@ -42,15 +42,6 @@
         android:searchIcon="@drawable/ic_search_appbar"
         android:visibility="gone"/>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recycler_view_products"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:paddingBottom="90dp"
-        android:clipToPadding="false"
-        app:layout_constraintTop_toBottomOf="@+id/search_view" />
-
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/create_your_fragment_fab"
         android:layout_width="wrap_content"
@@ -65,5 +56,14 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:tint="@color/white" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler_view_products"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:paddingBottom="90dp"
+        android:clipToPadding="false"
+        app:layout_constraintTop_toBottomOf="@+id/search_view" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,42 +1,41 @@
 package com.example.bazaar.adapter
 
-import android.annotation.SuppressLint
-import android.graphics.Color
-import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
-import androidx.appcompat.widget.AppCompatButton
-import androidx.navigation.findNavController
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.RecyclerView
 import com.example.bazaar.MyApplication
 import com.example.bazaar.R
-import com.example.bazaar.api.model.AddOrderResponse
 import com.example.bazaar.api.model.Orders
 import com.example.bazaar.api.model.User
 import com.example.bazaar.manager.SharedPreferencesManager
+import com.example.bazaar.viewmodels.UpdateOrderViewModel
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import de.hdodenhof.circleimageview.CircleImageView
+import kotlinx.coroutines.launch
 
 class OrderAdapter(
         private val view: View,
         private val mItemClickListener: ItemClickListener,
-        private var orders: MutableList<Orders>
+        private var orders: MutableList<Orders>,
+        private val updateOrderViewModel: UpdateOrderViewModel,
+        private val lifecycleOwner: LifecycleOwner
 )
     : RecyclerView.Adapter<OrderAdapter.DataViewHolder>(), Filterable {
 
+
     var ordersFilterList = ArrayList<Orders>()
+    private var checkSpinner = 0
+    private var isInOnGoingOrder = false
 
     init {
         ordersFilterList = orders as ArrayList<Orders>
     }
 
-    fun getItemData (position : Int) : Orders
-    {
-        return ordersFilterList[position]
-    }
 
     override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): DataViewHolder {
         val itemView =
@@ -46,16 +45,251 @@ class OrderAdapter(
 
     override fun onBindViewHolder(holder: DataViewHolder, position: Int) {
 
+        // Just in case status is set to ""
+        /*
+        if(ordersFilterList[position].status == ""){
+            updateOrderViewModel.updateOrderRequest.value.let {
+                if (it != null) {
+                    it.title = ordersFilterList[position].title
+                    it.price_per_unit = ordersFilterList[position].price_per_unit.toInt()
+                    it.status = "OPEN"
+                }
+                lifecycleOwner.lifecycleScope.launch {
+                    updateOrderViewModel.updateOrder(ordersFilterList[position].order_id)
+                }
+            }
+        }
+         */
 
         if(ordersFilterList[position].owner_username ==
                 MyApplication.sharedPreferences.getUserValue(SharedPreferencesManager.KEY_USER, User()).username) {
 
                     holder.profileNameTv.text = ordersFilterList[position].username
+
+                isInOnGoingOrder = false
+
+                when (ordersFilterList[position].status.toLowerCase().capitalize())
+                {
+                    "Incoming", "Open" -> {
+                        holder.acceptFab.visibility = View.VISIBLE
+                        holder.acceptedFab.visibility = View.GONE
+                        holder.ignoreFab.visibility = View.VISIBLE
+                        holder.ignoredFab.visibility = View.GONE
+                        holder.waitingFab.visibility = View.GONE
+                        holder.statusSp.visibility = View.INVISIBLE
+                        holder.statusSp.isClickable = false
+                        true
+                    }
+                    "Accepted", "Delivering" -> {
+
+                        holder.acceptFab.visibility = View.GONE
+                        holder.acceptedFab.visibility = View.VISIBLE
+                        holder.ignoreFab.visibility = View.GONE
+                        holder.ignoredFab.visibility = View.GONE
+                        holder.waitingFab.visibility = View.GONE
+                        holder.statusSp.visibility = View.VISIBLE
+                        holder.statusSp.isClickable = true
+                        holder.statusEt.visibility = View.GONE
+                        true
+                    }
+                    "Delivered" -> {
+                        holder.acceptFab.visibility = View.GONE
+                        holder.acceptedFab.visibility = View.VISIBLE
+                        holder.ignoreFab.visibility = View.GONE
+                        holder.ignoredFab.visibility = View.GONE
+                        holder.waitingFab.visibility = View.GONE
+                        holder.statusSp.visibility = View.INVISIBLE
+                        holder.statusSp.isClickable = false
+
+                        true
+                    }
+                    "Declined" -> {
+                        holder.acceptFab.visibility = View.GONE
+                        holder.acceptedFab.visibility = View.GONE
+                        holder.ignoreFab.visibility = View.GONE
+                        holder.ignoredFab.visibility = View.VISIBLE
+                        holder.waitingFab.visibility = View.GONE
+                        holder.statusSp.visibility = View.INVISIBLE
+                        holder.statusSp.isClickable = false
+                        true
+                    }
+                    else -> false
+                }
         }
         else{
+            isInOnGoingOrder = true
+
             holder.profileNameTv.text = ordersFilterList[position].owner_username
+
+            when (ordersFilterList[position].status.toLowerCase().capitalize())
+            {
+                "Incoming", "Open" -> {
+                    holder.acceptFab.visibility = View.GONE
+                    holder.acceptedFab.visibility = View.GONE
+                    holder.ignoreFab.visibility = View.GONE
+                    holder.ignoredFab.visibility = View.GONE
+                    holder.waitingFab.visibility = View.VISIBLE
+                    holder.statusSp.visibility = View.INVISIBLE
+                    holder.statusSp.isClickable = false
+                    true
+                }
+                "Accepted", "Delivering", "Delivered" -> {
+
+                    holder.acceptFab.visibility = View.GONE
+                    holder.acceptedFab.visibility = View.VISIBLE
+                    holder.ignoreFab.visibility = View.GONE
+                    holder.ignoredFab.visibility = View.GONE
+                    holder.waitingFab.visibility = View.GONE
+                    holder.statusSp.visibility = View.INVISIBLE
+                    holder.statusSp.isClickable = false
+                    true
+                }
+                "Declined" -> {
+                    holder.acceptFab.visibility = View.GONE
+                    holder.acceptedFab.visibility = View.GONE
+                    holder.ignoreFab.visibility = View.GONE
+                    holder.ignoredFab.visibility = View.VISIBLE
+                    holder.waitingFab.visibility = View.GONE
+                    holder.statusSp.visibility = View.INVISIBLE
+                    holder.statusSp.isClickable = false
+                    true
+                }
+                else -> false
+            }
         }
 
+        holder.statusEt.text = ordersFilterList[position].status.toLowerCase().capitalize()
+
+        // Create an ArrayAdapter using the string array and a default spinner layout
+        val adapter = ArrayAdapter.createFromResource(
+                view.context,
+                R.array.order_options_array,
+                android.R.layout.simple_spinner_item
+        ).also { adapter ->
+            // Specify the layout to use when the list of choices appears
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+            // Apply the adapter to the spinner
+            holder.statusSp.adapter = adapter
+        }
+
+        holder.statusSp.setSelection(adapter.getPosition(ordersFilterList[position].status.toLowerCase().capitalize()),false)
+        holder.statusSp.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+            }
+
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, positionSpinner: Int, id: Long) {
+                var status = ""
+
+                    when (positionSpinner) {
+                        0 -> {
+                            status = "INCOMING"
+                            updateOrderViewModel.updateOrderRequest.value.let {
+                                if (it != null) {
+                                    it.title = ordersFilterList[position].title
+                                    it.price_per_unit = ordersFilterList[position].price_per_unit.toInt()
+                                    it.status = status
+                                }
+                            }
+                            lifecycleOwner.lifecycleScope.launch {
+                                updateOrderViewModel.updateOrder(ordersFilterList[position].order_id)
+                            }
+
+                            true
+                        }
+                        1 -> {
+                            status = "ACCEPTED"
+                            updateOrderViewModel.updateOrderRequest.value.let {
+                                if (it != null) {
+                                    it.title = ordersFilterList[position].title
+                                    it.price_per_unit = ordersFilterList[position].price_per_unit.toInt()
+                                    it.status = status
+                                }
+                            }
+                            lifecycleOwner.lifecycleScope.launch {
+                                updateOrderViewModel.updateOrder(ordersFilterList[position].order_id)
+                            }
+                            true
+                        }
+                        2 -> {
+                            status = "DECLINED"
+                            updateOrderViewModel.updateOrderRequest.value.let {
+                                if (it != null) {
+                                    it.title = ordersFilterList[position].title
+                                    it.price_per_unit = ordersFilterList[position].price_per_unit.toInt()
+                                    it.status = status
+                                }
+                            }
+                            lifecycleOwner.lifecycleScope.launch {
+                                updateOrderViewModel.updateOrder(ordersFilterList[position].order_id)
+                            }
+                            true
+                        }
+                        3 -> {
+                            status = "DELIVERING"
+                            updateOrderViewModel.updateOrderRequest.value.let {
+                                if (it != null) {
+                                    it.title = ordersFilterList[position].title
+                                    it.price_per_unit = ordersFilterList[position].price_per_unit.toInt()
+                                    it.status = status
+                                }
+                            }
+                            lifecycleOwner.lifecycleScope.launch {
+                                updateOrderViewModel.updateOrder(ordersFilterList[position].order_id)
+                            }
+                            true
+                        }
+                        4 -> {
+                            status = "DELIVERED"
+                            updateOrderViewModel.updateOrderRequest.value.let {
+                                if (it != null) {
+                                    it.title = ordersFilterList[position].title
+                                    it.price_per_unit = ordersFilterList[position].price_per_unit.toInt()
+                                    it.status = status
+                                }
+                            }
+                            lifecycleOwner.lifecycleScope.launch {
+                                updateOrderViewModel.updateOrder(ordersFilterList[position].order_id)
+                            }
+                            true
+                        }
+                        else -> false
+                    }
+
+            }
+        }
+
+
+        holder.acceptFab.setOnClickListener{
+            var status = "ACCEPTED"
+
+            updateOrderViewModel.updateOrderRequest.value.let {
+                if (it != null) {
+                    it.title = ordersFilterList[position].title
+                    it.price_per_unit = ordersFilterList[position].price_per_unit.toInt()
+                    it.status = status
+                }
+            }
+            Log.d("SAS", status)
+            lifecycleOwner.lifecycleScope.launch {
+                updateOrderViewModel.updateOrder(ordersFilterList[position].order_id)
+            }
+        }
+
+        holder.ignoreFab.setOnClickListener{
+            var status = "DECLINED"
+            Log.d("SAS", status)
+            updateOrderViewModel.updateOrderRequest.value.let {
+                if (it != null) {
+                    it.title = ordersFilterList[position].title
+                    it.price_per_unit = ordersFilterList[position].price_per_unit.toInt()
+                    it.status = status
+                }
+            }
+
+            lifecycleOwner.lifecycleScope.launch {
+                updateOrderViewModel.updateOrder(ordersFilterList[position].order_id)
+            }
+        }
 
         holder.productNameTv.text = ordersFilterList[position].title
         holder.priceEditTv.text = ordersFilterList[position].price_per_unit
@@ -86,7 +320,6 @@ class OrderAdapter(
         var productImageCiV: CircleImageView = view.findViewById(R.id.product_image_civ)
         var profileNameTv: TextView = view.findViewById(R.id.profile_name_tv)
         var profileImageCiV: CircleImageView = view.findViewById(R.id.profile_image_civ)
-        var priceAmountSp: Spinner = view.findViewById(R.id.price_amount_sp)
         var productNameTv: TextView = view.findViewById(R.id.product_name_tv)
         var amountTv: TextView = view.findViewById(R.id.amount_tv)
         var amountEditTv: TextView = view.findViewById(R.id.amount_edit_tv)
@@ -95,8 +328,15 @@ class OrderAdapter(
         var arrowIv: ImageView = view.findViewById(R.id.arrow_iv)
         var ignoreFab: FloatingActionButton = view.findViewById(R.id.ignore_fab)
         var acceptFab: FloatingActionButton = view.findViewById(R.id.accept_fab)
+        var ignoredFab: FloatingActionButton = view.findViewById(R.id.ignored_fab)
+        var acceptedFab: FloatingActionButton = view.findViewById(R.id.accepted_fab)
+        var waitingFab: FloatingActionButton = view.findViewById(R.id.waiting_fab)
         var descriptionTv: TextView = view.findViewById(R.id.description_tv)
+        var statusSp: Spinner = view.findViewById(R.id.status_sp)
+        var statusEt: TextView = view.findViewById(R.id.status_et)
+
         var mItemClickListener: ItemClickListener? = itemClickListener
+
 
         override fun onClick(view: View) {
             if (mItemClickListener != null) {

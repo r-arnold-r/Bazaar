@@ -32,6 +32,7 @@ class ProductDetailFragment : Fragment() {
     private lateinit var productResponse : ProductResponse
     private lateinit var removeProductViewModel: RemoveProductViewModel
     private lateinit var addOrderViewModel: AddOrderViewModel
+    private lateinit var updateProductViewModel: UpdateProductViewModel
 
     companion object
     {
@@ -49,6 +50,9 @@ class ProductDetailFragment : Fragment() {
 
         val addOrderViewModelFactory = AddOrderViewModelFactory(this.requireContext(), Repository())
         addOrderViewModel = ViewModelProvider(this, addOrderViewModelFactory)[AddOrderViewModel::class.java]
+
+        val updateProductViewModelFactory = UpdateProductViewModelFactory(this.requireContext(), Repository())
+        updateProductViewModel = ViewModelProvider(this, updateProductViewModelFactory)[UpdateProductViewModel::class.java]
     }
 
     override fun onCreateView(
@@ -70,7 +74,7 @@ class ProductDetailFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.toolbar.setNavigationIcon(R.drawable.ic_toolbar_arrow);
+        binding.toolbar.setNavigationIcon(R.drawable.ic_toolbar_arrow)
         binding.toolbar.setNavigationOnClickListener {
             // back button pressed
             findNavController().navigateUp()
@@ -156,12 +160,12 @@ class ProductDetailFragment : Fragment() {
         if(productResponse.is_active)
         {
             aiTv.text = "Active"
-            aiTv.setTextColor(Color.parseColor("#00B5C0"));
+            aiTv.setTextColor(Color.parseColor("#00B5C0"))
             aiIv.setImageResource(R.drawable.ic_checkmark)
         }
         else{
             aiTv.text = "Inactive"
-            aiTv.setTextColor(Color.parseColor("#9A9A9A"));
+            aiTv.setTextColor(Color.parseColor("#9A9A9A"))
             aiIv.setImageResource(R.drawable.ic_inactive)
         }
 
@@ -276,6 +280,24 @@ class ProductDetailFragment : Fragment() {
             }
 
             modifyBtn.setOnClickListener{
+
+                updateProductObservable()
+
+                updateProductViewModel.updateProductRequest.value.let {
+                    if (it != null) {
+                        it.title = productResponse.title
+                        it.rating = productResponse.rating.toFloat()
+                        it.amount_type = productResponse.amount_type
+                        it.is_active = aiSc.text == "Active"
+                        it.price_per_unit = productResponse.price_per_unit.toInt()
+                        it.price_type = productResponse.price_type
+                    }
+                }
+
+                lifecycleScope.launch {
+                    updateProductViewModel.updateProduct(productResponse.product_id)
+                }
+
                 dialog.dismiss()
             }
 
@@ -301,6 +323,24 @@ class ProductDetailFragment : Fragment() {
     private fun removeProductObservable(){
         removeProductViewModel.removeProductResponse.observe(viewLifecycleOwner){
             findNavController().navigate(R.id.action_productDetailFragment_to_timelineFragment)
+        }
+    }
+
+    private fun updateProductObservable(){
+        updateProductViewModel.updateProductResponse.observe(viewLifecycleOwner){
+            Log.d("ProductDetailFragment", "updateProductObservable: SUCCESS!!!")
+
+            if(updateProductViewModel.updateProductResponse.value!!.updated_item.is_active)
+            {
+                binding.inactiveTv.text = "Active"
+                binding.inactiveTv.setTextColor(Color.parseColor("#00B5C0"))
+                binding.inactiveIm.setImageResource(R.drawable.ic_checkmark)
+            }
+            else{
+                binding.inactiveTv.text = "Inactive"
+                binding.inactiveTv.setTextColor(Color.parseColor("#9A9A9A"))
+                binding.inactiveIm.setImageResource(R.drawable.ic_inactive)
+            }
         }
     }
 

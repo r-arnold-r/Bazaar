@@ -48,15 +48,15 @@ class AddProductViewModel (val context: Context, private val repository: Reposit
             when(e) {
                 is HttpException -> {
                     if(e.code() == 302) {
-                        Log.d("AddProductViewModel", "Token expired: ${e.toString()}")
+                        Log.d("AddProductViewModel", "Token expired: $e")
                     }
                     else{
-                        Log.d("AddProductViewModel", "AddProductViewModel - exception: ${e.toString()}")
+                        Log.d("AddProductViewModel", "AddProductViewModel - exception: $e")
                         error.value = e.message.toString()
                     }
                 }
                 else -> {
-                    Log.d("AddProductViewModel", "exception: ${e.toString()}")
+                    Log.d("AddProductViewModel", "exception: $e")
                     error.value = e.message.toString()
                 }
             }

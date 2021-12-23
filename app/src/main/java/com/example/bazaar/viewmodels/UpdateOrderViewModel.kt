@@ -42,7 +42,7 @@ class UpdateOrderViewModel (val context: Context, private val repository: Reposi
 
         } catch (e: Exception) {
 
-            Log.d("UpdateOrderViewModel", "exception: ${e.toString()}")
+            Log.d("UpdateOrderViewModel", "exception: $e")
             error.value = e.message.toString()
 
         }

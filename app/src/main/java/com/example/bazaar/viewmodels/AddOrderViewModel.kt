@@ -39,7 +39,7 @@ class AddOrderViewModel (val context: Context, private val repository: Repositor
             response.value = repository.addOrder(token!!, request)
 
         } catch (e: Exception) {
-                Log.d("AddOrderViewModel", "exception: ${e.toString()}")
+                Log.d("AddOrderViewModel", "exception: $e")
                 error.value = e.message.toString()
         }
 

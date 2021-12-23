@@ -27,7 +27,7 @@ class RemoveOrderViewModel (val context: Context, private val repository: Reposi
 
         } catch (e: Exception) {
 
-            Log.d("RemoveOrderViewModel", "exception: ${e.toString()}")
+            Log.d("RemoveOrderViewModel", "exception: $e")
             error.value = e.message.toString()
 
         }

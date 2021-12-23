@@ -15,7 +15,7 @@ import com.example.bazaar.repository.Repository
 
 class UpdateProductViewModel (val context: Context, private val repository: Repository) : ViewModel() {
     var error: MutableLiveData<String> = MutableLiveData()
-    var updateProductRespone = SingleLiveEvent<UpdateProductRespone>()
+    var updateProductResponse = SingleLiveEvent<UpdateProductRespone>()
     var updateProductRequest = SingleLiveEvent<UpdateProductRequest>()
 
     init{
@@ -41,11 +41,11 @@ class UpdateProductViewModel (val context: Context, private val repository: Repo
                     "Empty token!"
             )
 
-            updateProductRespone.value = repository.updateProduct(token!!, product_id, request)
+            updateProductResponse.value = repository.updateProduct(token!!, product_id, request)
 
         } catch (e: Exception) {
 
-            Log.d("UpdateProductViewModel", "exception: ${e.toString()}")
+            Log.d("UpdateProductViewModel", "exception: $e")
             error.value = e.message.toString()
 
         }

@@ -37,6 +37,7 @@ class MyFaresFragment : Fragment() , OrderAdapter.ItemClickListener{
     private val binding get() = _binding!!
 
     private lateinit var getOrderViewModel: GetOrderViewModel
+    private lateinit var updateOrderViewModel: UpdateOrderViewModel
 
     private var recyclerViewDecorated = false
     private lateinit var recyclerView: RecyclerView
@@ -58,6 +59,9 @@ class MyFaresFragment : Fragment() , OrderAdapter.ItemClickListener{
 
         val getOrderViewModelFactory =  GetOrderViewModelFactory(this.requireContext(), Repository())
         getOrderViewModel = ViewModelProvider(this, getOrderViewModelFactory)[GetOrderViewModel::class.java]
+
+        val updateOrderViewModelFactory =  UpdateOrderViewModelFactory(this.requireContext(), Repository())
+        updateOrderViewModel = ViewModelProvider(this, updateOrderViewModelFactory)[UpdateOrderViewModel::class.java]
     }
 
     override fun onCreateView(
@@ -74,8 +78,10 @@ class MyFaresFragment : Fragment() , OrderAdapter.ItemClickListener{
             findNavController().navigateUp()
         }
 
+        updateOrderSuccessful()
         getOrdersViewModelProductsObservable(view)
         getOngoingSales()
+        ordersViewModelErrorObservable()
         ordersViewModelFilterObservable()
         handleToggleButtons()
 
@@ -94,7 +100,7 @@ class MyFaresFragment : Fragment() , OrderAdapter.ItemClickListener{
                     binding.ongoingOrdersTbtn.isChecked = false
                     binding.ongoingSalesTbtn.isClickable = false
                     binding.ongoingOrdersTbtn.isClickable = true
-
+                    recyclerView.adapter = null
                     getOngoingSales()
                 }
             }
@@ -106,7 +112,7 @@ class MyFaresFragment : Fragment() , OrderAdapter.ItemClickListener{
                     binding.ongoingSalesTbtn.isChecked = false
                     binding.ongoingOrdersTbtn.isClickable = false
                     binding.ongoingSalesTbtn.isClickable = true
-
+                    recyclerView.adapter = null
                     getOngoingOrders()
                 }
             }
@@ -149,6 +155,12 @@ class MyFaresFragment : Fragment() , OrderAdapter.ItemClickListener{
         }
     }
 
+    private fun ordersViewModelErrorObservable(){
+        updateOrderViewModel.error.observe(viewLifecycleOwner){
+            getOrders()
+        }
+    }
+
     private fun getOrders()
     {
         lifecycleScope.launch {
@@ -168,7 +180,7 @@ class MyFaresFragment : Fragment() , OrderAdapter.ItemClickListener{
         recyclerView = binding.recyclerViewProducts
 
         //creating and setting up adapter with recyclerView
-        orderAdapter = OrderAdapter(view, this, orders) //setting the data and listener for adapter
+        orderAdapter = OrderAdapter(view, this, orders, updateOrderViewModel, this) //setting the data and listener for adapter
 
         val layoutManager: RecyclerView.LayoutManager =
                 LinearLayoutManager(activity, RecyclerView.VERTICAL, false)
@@ -217,6 +229,12 @@ class MyFaresFragment : Fragment() , OrderAdapter.ItemClickListener{
             }
         }
 
+    }
+
+    private fun updateOrderSuccessful(){
+        updateOrderViewModel.updateOrderResponse.observe(viewLifecycleOwner){
+            Log.d("MyFaresFragment", "updateOrderSuccessful: YUHUU")
+        }
     }
 
     override fun onDestroyView()

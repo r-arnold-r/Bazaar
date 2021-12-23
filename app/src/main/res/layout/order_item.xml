@@ -45,17 +45,33 @@
         app:layout_constraintStart_toStartOf="@+id/profile_image_civ"
         app:layout_constraintTop_toBottomOf="@+id/profile_image_civ" />
 
-    <Spinner
-        android:id="@+id/price_amount_sp"
+    <androidx.appcompat.widget.AppCompatSpinner
+        android:id="@+id/status_sp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:clickable="false"
+        android:dropDownWidth="wrap_content"
+        android:entries="@array/order_options_array"
+        android:spinnerMode="dropdown"
+        android:visibility="invisible"
+        app:layout_constraintStart_toEndOf="@+id/product_image_civ"
+        app:layout_constraintTop_toTopOf="@+id/product_image_civ" />
+
+    <TextView
+        android:id="@+id/status_et"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
         android:dropDownWidth="wrap_content"
         android:spinnerMode="dropdown"
+        android:text="Accepted"
+        android:textStyle="bold"
+        android:textColor="@color/light_blue"
         app:layout_constraintStart_toEndOf="@+id/product_image_civ"
         app:layout_constraintTop_toTopOf="@+id/product_image_civ" />
-
 
     <TextView
         android:id="@+id/product_name_tv"
@@ -68,7 +84,7 @@
         android:textColor="@color/B_black"
         android:textSize="16sp"
         app:layout_constraintStart_toEndOf="@+id/product_image_civ"
-        app:layout_constraintTop_toBottomOf="@+id/price_amount_sp" />
+        app:layout_constraintTop_toBottomOf="@+id/status_sp" />
 
     <ImageView
         android:id="@+id/arrow_iv"
@@ -171,6 +187,7 @@
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
         android:layout_marginBottom="8dp"
+        android:visibility="gone"
         android:clickable="true"
         android:focusable="true"
         android:src="@drawable/ic_check_mark_oder_item"
@@ -187,15 +204,77 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="10dp"
         android:layout_marginRight="10dp"
+        android:visibility="gone"
         android:clickable="true"
         android:focusable="true"
         android:src="@drawable/ic_ignore_order_item"
-
         app:backgroundTint="@color/black"
         app:fabSize="mini"
         app:layout_constraintBottom_toBottomOf="@+id/accept_fab"
         app:layout_constraintEnd_toStartOf="@+id/accept_fab"
         app:layout_constraintTop_toTopOf="@+id/accept_fab"
         app:tint="@color/white" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/waiting_fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginBottom="8dp"
+        android:clickable="false"
+        android:focusable="true"
+        android:src="@drawable/ic_wait"
+        android:backgroundTint="@color/white"
+        app:backgroundTint="@color/light_blue"
+        app:tint="@color/light_blue"
+        app:borderWidth="1dp"
+        app:fabSize="mini"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/description_tv" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/accepted_fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginBottom="8dp"
+        android:clickable="false"
+        android:focusable="true"
+        android:src="@drawable/ic_check_mark_oder_item"
+        android:backgroundTint="@color/white"
+        app:backgroundTint="@color/light_blue"
+        app:tint="@color/light_blue"
+        app:borderWidth="1dp"
+        android:visibility="gone"
+        app:fabSize="mini"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/description_tv" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/ignored_fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginBottom="8dp"
+        android:clickable="false"
+        android:focusable="true"
+        android:src="@drawable/ic_ignore_order_item"
+        android:backgroundTint="@color/white"
+        app:backgroundTint="@color/black"
+        android:visibility="gone"
+        app:fabSize="mini"
+        app:borderWidth="1dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/description_tv"/>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

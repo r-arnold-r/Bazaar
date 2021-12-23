@@ -1,11 +1,14 @@
 package com.example.bazaar.fragments
 
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.SearchView
 import android.widget.Toast
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
@@ -74,14 +77,30 @@ class MyMarketFragment : Fragment(), ProductAdapter.ItemClickListener{
         binding.toolbar.setNavigationIcon(R.drawable.ic_toolbar_arrow)
         binding.toolbar.setNavigationOnClickListener {
             // back button pressed
-            findNavController().navigate(R.id.action_myMarketFragment_to_timelineFragment)
+            findNavController().navigateUp()
         }
         createYourFareFABHandler()
         getProductsViewModelProductsObservable(view)
         getProductsViewModelErrorObservable()
         getProducts()
+        searchViewHandler()
 
         return view
+    }
+
+    private fun searchViewHandler(){
+        binding.searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+
+            override fun onQueryTextChange(newText: String): Boolean {
+                productAdapter.filter.filter(newText)
+                return false
+            }
+
+            override fun onQueryTextSubmit(query: String): Boolean {
+                // task HERE
+                return false
+            }
+        })
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -100,7 +119,11 @@ class MyMarketFragment : Fragment(), ProductAdapter.ItemClickListener{
                 }
                 R.id.nav_search -> {
                     // Save profile changes
-                    Toast.makeText(requireContext(), "Click Search Icon.", Toast.LENGTH_SHORT).show()
+                    if (binding.searchView.visibility == View.GONE) {
+                        binding.searchView.visibility = View.VISIBLE
+                    } else {
+                        binding.searchView.visibility = View.GONE
+                    }
                     true
                 }
                 else -> false

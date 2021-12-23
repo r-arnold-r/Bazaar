@@ -76,6 +76,9 @@
         <action
             android:id="@+id/action_myFaresFragment_to_myMarketFragment"
             app:destination="@id/myMarketFragment" />
+        <action
+            android:id="@+id/action_myFaresFragment_to_settingsFragment"
+            app:destination="@id/settingsFragment" />
     </fragment>
     <fragment
         android:id="@+id/myMarketFragment"
@@ -127,6 +130,9 @@
         <argument
             android:name="username"
             app:argType="string" />
+        <action
+            android:id="@+id/action_settingsFragment_to_myFaresFragment"
+            app:destination="@id/myFaresFragment" />
     </fragment>
     <fragment
         android:id="@+id/createYourFareFragment"

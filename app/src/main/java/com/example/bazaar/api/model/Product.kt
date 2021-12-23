@@ -7,12 +7,6 @@ import com.squareup.moshi.JsonClass
 import kotlinx.parcelize.Parcelize
 import retrofit2.http.Field
 
-data class Products(val item_count: Int, val products : List<ProductResponse>, val timestamp: Long)
-
-data class Product(val rating : Double, val amount_type : String, val price_type : String, val product_id : String,
-                   val username : String, val is_active : Boolean, val price_per_unit : Int, val units : Int,
-                   val description : String, val title : String, val images : List<String>, val creation_time : Long, val messages : List<String>)
-
 @Parcelize
 @JsonClass(generateAdapter = true)
     data class ProductResponse (
@@ -76,3 +70,36 @@ data class RemoveProductResponse(
             var amount_type: String,
             var price_type: String
     )
+
+
+@JsonClass(generateAdapter = true)
+data class UpdateProductRequest (
+        var price_per_unit: Int,
+        var is_active: Boolean,
+        var title: String,
+        var rating: Float,
+        var amount_type: String,
+        var price_type: String
+)
+
+@JsonClass(generateAdapter = true)
+data class UpdateProductRespone (
+        val updated_item : Updated_product_item
+)
+
+@JsonClass(generateAdapter = true)
+data class Updated_product_item (
+        val rating : Int,
+        val amount_type : String,
+        val price_type : String,
+        val product_id : String,
+        val username : String,
+        val is_active : Boolean,
+        val price_per_unit : Int,
+        val units : String,
+        val description : String,
+        val title : String,
+        val images : List<String>,
+        val creation_time : Int,
+        val messages : List<String>
+)

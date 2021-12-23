@@ -73,7 +73,7 @@ class ProductDetailFragment : Fragment() {
         binding.toolbar.setNavigationIcon(R.drawable.ic_toolbar_arrow);
         binding.toolbar.setNavigationOnClickListener {
             // back button pressed
-            findNavController().navigate(R.id.action_productDetailFragment_to_timelineFragment)
+            findNavController().navigateUp()
         }
 
     }
@@ -92,6 +92,7 @@ class ProductDetailFragment : Fragment() {
             if(productResponse.username == MyApplication.sharedPreferences.getUserValue(
                             SharedPreferencesManager.KEY_USER, User()).username){
                 setOwnerView()
+                Log.d("SSS", productResponse.toString())
             }
             else{
                 setUserView()

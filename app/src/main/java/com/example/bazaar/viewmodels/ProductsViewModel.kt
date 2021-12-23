@@ -8,7 +8,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.bazaar.MyApplication
 import com.example.bazaar.SingleLiveEvent
-import com.example.bazaar.api.model.Product
 import com.example.bazaar.api.model.ProductsListResponse
 import com.example.bazaar.manager.SharedPreferencesManager
 import com.example.bazaar.repository.Repository

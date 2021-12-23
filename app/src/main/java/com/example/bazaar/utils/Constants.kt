@@ -8,9 +8,14 @@ object Constants {
     const val GET_PRODUCT_URL ="products"
     const val REFRESH_TOKEN_URL = "user/refresh"
     const val ADD_PRODUCT_URL ="products/add"
+    const val UPDATE_PRODUCT_URL = "products/update"
     const val GET_USER_INFO_URL ="user/data"
-    const val UPDATE_USER_DATA = "user/update"
-    const val REMOVE_PRODUCT = "products/remove"
+    const val UPDATE_USER_DATA_URL = "user/update"
+    const val REMOVE_PRODUCT_URL = "products/remove"
+    const val GET_ORDERS_URL = "orders"
+    const val ADD_ORDER_URL = "orders/add"
+    const val REMOVE_ORDER_URL = "orders/remove"
+    const val UPDATE_ORDER_URL = "orders/update"
     /**
      * Headers.
      */
@@ -26,4 +31,5 @@ object Constants {
      */
 
     const val QUERY_PRODUCT_ID = "product_id"
+    const val QUERY_ORDER_ID = "order_id"
 }

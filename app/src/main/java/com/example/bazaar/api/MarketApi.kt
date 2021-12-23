@@ -39,12 +39,37 @@ interface MarketApi {
     suspend fun getUserInfo(@Header(Constants.HEADER_USERNAME) username: String): GetUserInfoListResponse
 
     @Multipart
-    @POST(Constants.UPDATE_USER_DATA)
+    @POST(Constants.UPDATE_USER_DATA_URL)
     suspend fun updateUserData(@Header(Constants.HEADER_TOKEN) token: String,
                                @Part("username") username: String,
                                @Part("phone_number") phone_number: Long,
                                ): UpdateUserDataListResponse
 
-    @POST(Constants.REMOVE_PRODUCT)
+    @POST(Constants.REMOVE_PRODUCT_URL)
     suspend fun removeProduct(@Header(Constants.HEADER_TOKEN) token: String, @Query(Constants.QUERY_PRODUCT_ID) product_id: String): RemoveProductResponse
+
+    @POST(Constants.UPDATE_PRODUCT_URL)
+    suspend fun updateProduct(@Header(Constants.HEADER_TOKEN) token: String,
+                              @Query(Constants.QUERY_PRODUCT_ID) product_id: String,
+                              @Body request: UpdateProductRequest): UpdateProductRespone
+
+    @GET(Constants.GET_ORDERS_URL)
+    suspend fun getOrders(@Header(Constants.HEADER_TOKEN) token: String): GetOrdersListResponse
+
+    @Multipart
+    @POST(Constants.ADD_ORDER_URL)
+    suspend fun addOrder(@Header(Constants.HEADER_TOKEN) token: String,
+                         @Part("title") title: String,
+                         @Part("description") description: String,
+                         @Part("price_per_unit") price_per_unit: Int,
+                         @Part("units") units: Int,
+                         @Part("owner_username") owner_username: String): AddOrderResponse
+
+    @POST(Constants.REMOVE_ORDER_URL)
+    suspend fun removeOrder(@Header(Constants.HEADER_TOKEN) token: String, @Query(Constants.QUERY_ORDER_ID) order_id: String): RemoveOrderResponse
+
+    @POST(Constants.UPDATE_ORDER_URL)
+    suspend fun updateOrder(@Header(Constants.HEADER_TOKEN) token: String,
+                              @Query(Constants.QUERY_ORDER_ID) order_id: String,
+                              @Body request: UpdateOrderRequest): UpdateOrderResponse
 }

@@ -23,4 +23,12 @@
         <item>Db</item>
     </string-array>
 
+    <string-array name="oder_options_array">
+        <item>Incoming</item>
+        <item>Accepted</item>
+        <item>Declined</item>
+        <item>Delivering</item>
+        <item>Delivered</item>
+    </string-array>
+
 </resources>

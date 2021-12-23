@@ -103,7 +103,6 @@ class TimelineFragment : Fragment() , ProductAdapter.ItemClickListener{
 
                 Handler(Looper.getMainLooper()).postDelayed({
                     binding.numberOfFairsTv.text = productAdapter.productsFilterList.count().toString() + " Fairs"
-                    Log.d("XYX", productAdapter.itemCount.toString())
                 }, 100)
 
                 return false

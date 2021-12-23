@@ -32,6 +32,16 @@
     </com.google.android.material.appbar.AppBarLayout>
 
 
+    <SearchView
+        android:id="@+id/search_view"
+        android:theme="@style/SearchViewStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/app_bar_layout"
+        android:background="@color/appBarColor"
+        android:searchIcon="@drawable/ic_search_appbar"
+        android:visibility="gone"/>
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_view_products"
         android:layout_width="match_parent"
@@ -39,7 +49,7 @@
         android:layout_marginTop="16dp"
         android:paddingBottom="90dp"
         android:clipToPadding="false"
-        app:layout_constraintTop_toBottomOf="@+id/app_bar_layout" />
+        app:layout_constraintTop_toBottomOf="@+id/search_view" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/create_your_fragment_fab"

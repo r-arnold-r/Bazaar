@@ -1,1 +1,2 @@
-# Bazaar Rozsnyai Arnold Robert szamitastechnika 4.B
+# Bazaar  
+University market place project powered by 3SS. 
